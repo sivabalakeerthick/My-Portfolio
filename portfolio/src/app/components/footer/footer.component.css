@@ -1,0 +1,14 @@
+footer {
+  text-align: center;
+  padding: 20px;
+  background-color: var(--light-bg);
+  color: var(--light-text);
+  border-top: 1px solid #ddd;
+  font-size: 0.9rem;
+}
+
+body.dark-mode footer {
+  background-color: var(--dark-bg);
+  color: var(--dark-text);
+  border-top: 1px solid #444;
+}
