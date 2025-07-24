@@ -1,0 +1,17 @@
+<nav class="navbar">
+  <div class="logo"></div>
+  <ul class="nav-links">
+    <li><a [class.active]="activeSection === 'home'" href="#hero">Home</a></li>
+    <li><a [class.active]="activeSection === 'about'" href="#about">About</a></li>
+    <li><a [class.active]="activeSection === 'experience'" href="#experience">Experience</a></li>
+    <li><a [class.active]="activeSection === 'skills'" href="#skills">Skills</a></li>
+    <li><a [class.active]="activeSection === 'projects'" href="#projects">Projects</a></li>
+    <li><a [class.active]="activeSection === 'education'" href="#education">Education</a></li>
+    <li><a [class.active]="activeSection === 'contact'" href="#contact">Contact</a></li>
+    <li>
+      <button class="theme-toggle" (click)="toggleTheme()">
+        {{ isDarkMode ? '🌙' : '☀️' }}
+      </button>
+    </li>
+  </ul>
+</nav>

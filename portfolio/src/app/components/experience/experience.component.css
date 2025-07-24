@@ -1,0 +1,22 @@
+.experience-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.experience-item {
+  background: rgba(0, 123, 255, 0.08);
+  border-left: 4px solid var(--primary-color);
+  padding: 15px 20px;
+  border-radius: 8px;
+}
+
+.experience-item h4 {
+  font-size: 1.2rem;
+  margin-bottom: 6px;
+}
+
+.experience-item span {
+  color: gray;
+  font-size: 0.95rem;
+}
