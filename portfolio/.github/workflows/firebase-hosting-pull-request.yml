@@ -1,32 +1,51 @@
-name: Preview on Firebase Hosting
+name: Preview Firebase Hosting on Pull Request
 
-on:
+'on':  
   pull_request:
+    types: [opened, synchronize, reopened, closed]
     branches:
       - main
 
 jobs:
   build_and_preview:
+    if: github.event.action != 'closed'
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
+      - name: Checkout Repo
+        uses: actions/checkout@v3
 
-      - name: Set up Node.js
+      - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '18'
 
-      - name: Install dependencies and build Angular project
+      - name: Install dependencies and build Angular app
         run: |
           cd portfolio
           npm install
           npm run build
 
-      - name: Deploy preview to Firebase Hosting
+      - name: Deploy to Firebase Preview Channel
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
           firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MY_APPLICATION1_19358 }}'
           projectId: portfolio-sivabalakeerthick
+          entryPoint: portfolio
+          expires: 7d
+
+  close_preview:
+    if: github.event.action == 'closed'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Close Firebase Preview Channel
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: '${{ secrets.GITHUB_TOKEN }}'
+          firebaseServiceAccount: '${{ secrets.FIREBASE_SERVICE_ACCOUNT_MY_APPLICATION1_19358 }}'
+          projectId: portfolio-sivabalakeerthick
+          entryPoint: portfolio
+          channelId: pr-${{ github.event.pull_request.number }}
+          action: delete
