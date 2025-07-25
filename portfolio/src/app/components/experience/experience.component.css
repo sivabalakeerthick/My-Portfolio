@@ -1,22 +1,114 @@
-.experience-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+/* === EXPERIENCE SECTION HEADING === */
+.experience h2 {
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  color: var(--primary-color);
+  margin-bottom: 30px;
+  text-align: center;
 }
 
-.experience-item {
-  background: rgba(0, 123, 255, 0.08);
-  border-left: 4px solid var(--primary-color);
-  padding: 15px 20px;
-  border-radius: 8px;
+/* === EXPERIENCE GRID === */
+.experience-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 30px;
+  max-width: 1000px;
+  width: 100%;
+  padding: 0 20px;
+  margin: 0 auto;
 }
 
-.experience-item h4 {
-  font-size: 1.2rem;
+/* === EXPERIENCE CARD === */
+.experience-card {
+  background-color: #f9f9ff;
+  border-left: 5px solid var(--primary-color);
+  padding: 20px 25px;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  text-align: left;
+}
+
+.experience-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
+}
+
+/* === EXPERIENCE CARD TEXT === */
+.experience-card h3 {
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+  color: #000;
+  font-weight: 600;
+}
+
+.experience-card .company {
+  font-size: 1rem;
+  font-style: italic;
+  color: var(--text-muted);
   margin-bottom: 6px;
+  display: block;
 }
 
-.experience-item span {
-  color: gray;
-  font-size: 0.95rem;
+.experience-card .duration-location {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+  margin-bottom: 12px;
+  display: block;
+}
+
+/* RESPONSIBILITIES LIST */
+.experience-card ul {
+  list-style: none;
+  padding-left: 0;
+}
+
+.experience-card ul li {
+  position: relative;
+  padding-left: 1.2rem;
+  margin-bottom: 0.6rem;
+  color: var(--text-body);
+  line-height: 1.6;
+}
+
+.experience-card ul li::before {
+  content: "•";
+  position: absolute;
+  left: 0;
+  color: var(--primary-color);
+  font-size: 1.2rem;
+}
+
+/* === THEME VARIABLES === */
+:root {
+  --primary-color: #4f46e5;
+  --card-bg: #f9f9ff;
+  --text-body: #333;
+  --text-muted: #6c757d;
+  --text-secondary: #999;
+  --dark-bg: #121212;
+  --dark-text: #ddd;
+}
+
+/* === DARK MODE === */
+body.dark-mode .experience {
+  background-color: var(--dark-bg);
+}
+
+body.dark-mode .experience-card {
+  background-color: #1e1e1e;
+  border-left-color: var(--primary-color);
+  color: var(--dark-text);
+}
+
+body.dark-mode .experience-card h3 {
+  color: var(--primary-color);
+}
+
+body.dark-mode .experience-card .company,
+body.dark-mode .experience-card .duration-location {
+  color: #aaa;
+}
+
+body.dark-mode .experience-card ul li {
+  color: #ccc;
 }

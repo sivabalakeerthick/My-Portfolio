@@ -1,25 +1,115 @@
+:root {
+  --primary-color: #1e88e5;
+  /* Elegant Blue */
+  --secondary-color: #1565c0;
+  /* Darker Blue */
+  --accent-color: #26c6da;
+  /* Cyan Accent */
+  --text-dark: #1a1a1a;
+  --text-light: #f9f9f9;
+  --bg-color: #f4f7fa;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-dark);
+  font-family: 'Segoe UI', sans-serif;
+}
+
+/* ===================== HERO SECTION ===================== */
 .hero {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  padding-top: 150px;
+  padding: 130px 1rem 60px;
   text-align: center;
 }
 
-.hero h1 {
-  font-size: 3rem;
-  margin-bottom: 10px;
+.profile-image {
+  width: 230px;
+  height: 230px;
+  object-fit: cover;
+  border-radius: 60%;
+  box-shadow: 0 10px 30px rgba(30, 136, 229, 0.25);
+  transition: transform 0.3s ease;
 }
 
-.hero p {
-  font-size: 1.2rem;
-  max-width: 700px;
+.profile-image:hover {
+  transform: scale(1.05);
 }
-.hero img {
-  max-width: 250px;
-  width: 100%;
-  height: auto;
-  border-radius: 60%;
-  box-shadow: 0 0 15px rgba(0,0,0,0.2);
+
+.hero-title {
+  font-size: 2.8rem;
+  font-weight: 700;
+  margin-top: 25px;
+  color: var(--primary-color);
+  letter-spacing: 0.5px;
+}
+
+.hero-role {
+  font-size: 1.3rem;
+  color: #444;
+  margin-top: 6px;
+  font-weight: 500;
+}
+
+.hero-bio {
+  max-width: 680px;
+  font-size: 1.1rem;
+  line-height: 1.8;
+  color: inherit;
+  /* Inherit from body for light/dark support */
+  margin-top: 20px;
+  font-style: italic;
+}
+
+.hero-bio strong {
+  color: var(--accent-color);
+  font-weight: 600;
+  font-style: normal;
+}
+
+.hero-buttons {
+  margin-top: 30px;
+}
+
+.resume-btn {
+  display: inline-block;
+  margin: 0 10px;
+  padding: 12px 24px;
+  background: var(--primary-color);
+  color: white;
+  border-radius: 30px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  box-shadow: 0 6px 16px rgba(30, 136, 229, 0.3);
+}
+
+.resume-btn:hover {
+  background-color: var(--secondary-color);
+  transform: translateY(-2px);
+}
+
+/* ===================== DARK MODE ===================== */
+body.dark-mode {
+  background-color: #121212;
+  color: #f9f9f9;
+}
+
+body.dark-mode .hero-role {
+  color: white;
+}
+
+body.dark-mode .hero-bio {
+  color: white;
+}
+
+body.dark-mode .hero-bio strong {
+  color: white;
+}
+
+
+body.dark-mode .resume-btn {
+  background-color: #64b5f6;
 }

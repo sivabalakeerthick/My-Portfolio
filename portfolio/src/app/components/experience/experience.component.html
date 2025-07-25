@@ -1,12 +1,13 @@
-<div class="skills-grid" data-aos="zoom-in">
-<section class="experience-section" id="experience">
-  <h2>Experience</h2>
+<section class="experience-section" id="experience" data-aos="zoom-in">
+  <h2 class="section-title">Experience</h2>
 
   <div *ngFor="let exp of experiences" class="experience-card">
-    <h3>{{ exp.role }}</h3>
-    <p class="company">{{ exp.company }} • {{ exp.duration }}</p>
-    <p class="location">{{ exp.location }}</p>
-    <ul>
+    <div class="experience-header">
+      <h3 class="role">{{ exp.role }}</h3>
+      <span class="company">{{ exp.company }}</span>
+      <span class="duration-location">{{ exp.duration }} • {{ exp.location }}</span>
+    </div>
+    <ul class="responsibilities">
       <li *ngFor="let task of exp.responsibilities">{{ task }}</li>
     </ul>
   </div>
