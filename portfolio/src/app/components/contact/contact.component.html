@@ -1,28 +1,28 @@
-<div class="skills-grid" data-aos="zoom-in">
-<h2>Contact Me:</h2>
-<section id="contact" class="contact">
-<form [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate>
-  <input type="text" placeholder="Your Name" formControlName="name" />
-  <div *ngIf="submitted && f['name'].errors" class="error">
-    <small *ngIf="f['name'].errors?.['required']">Name is required.</small>
-    <small *ngIf="f['name'].errors?.['minlength']">Min 3 characters.</small>
-  </div>
+<section id="contact" class="contact-section" data-aos="fade-up">
+  <h2 class="section-title">Contact Me</h2>
 
-  <input type="email" placeholder="Your Email" formControlName="email" />
-  <div *ngIf="submitted && f['email'].errors" class="error">
-    <small *ngIf="f['email'].errors?.['required']">Email is required.</small>
-    <small *ngIf="f['email'].errors?.['email']">Invalid email.</small>
-  </div>
+  <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate class="contact-form">
+    <input type="text" placeholder="Your Name" formControlName="name" />
+    <div *ngIf="submitted && f['name'].errors" class="error-msg">
+      <small *ngIf="f['name'].errors?.['required']">Name is required.</small>
+      <small *ngIf="f['name'].errors?.['minlength']">Min 3 characters.</small>
+    </div>
 
-  <textarea placeholder="Your Message" formControlName="message"></textarea>
-  <div *ngIf="submitted && f['message'].errors" class="error">
-    <small *ngIf="f['message'].errors?.['required']">Message is required.</small>
-    <small *ngIf="f['message'].errors?.['minlength']">Min 10 characters.</small>
-  </div>
+    <input type="email" placeholder="Your Email" formControlName="email" />
+    <div *ngIf="submitted && f['email'].errors" class="error-msg">
+      <small *ngIf="f['email'].errors?.['required']">Email is required.</small>
+      <small *ngIf="f['email'].errors?.['email']">Invalid email.</small>
+    </div>
 
-  <button type="submit">Send</button>
+    <textarea rows="6" placeholder="Your Message" formControlName="message"></textarea>
+    <div *ngIf="submitted && f['message'].errors" class="error-msg">
+      <small *ngIf="f['message'].errors?.['required']">Message is required.</small>
+      <small *ngIf="f['message'].errors?.['minlength']">Min 10 characters.</small>
+    </div>
 
-  <div *ngIf="successMessage" class="success">{{ successMessage }}</div>
-  <div *ngIf="errorMessage" class="error">{{ errorMessage }}</div>
-</form>
+    <button type="submit">Send Message</button>
+
+    <div *ngIf="successMessage" class="success-msg">{{ successMessage }}</div>
+    <div *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</div>
+  </form>
 </section>

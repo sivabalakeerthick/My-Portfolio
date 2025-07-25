@@ -70,6 +70,10 @@
               "browserTarget": "portfolio:build:development"
             }
           },
+          "options":{
+            "port": 4200,
+            "open": true
+          },
           "defaultConfiguration": "development"
         },
         "extract-i18n": {

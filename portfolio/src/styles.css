@@ -24,10 +24,24 @@ body {
   scroll-behavior: smooth;
 }
 
-body.dark-mode {
-  background-color: var(--dark-bg);
-  color: var(--dark-text);
+/* Background image only for light mode */
+body:not(.dark-mode) {
+  background-image: url('assets/lightbg.avif');
+  /* Replace with your image path */
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-position: center;
 }
+
+/* Optional: Remove background in dark mode */
+body.dark-mode {
+  background-image: url('assets/darkbg.avif');
+  background-color: #121212;
+  /* fallback dark color */
+}
+
+
 
 body.dark-mode .navbar {
   background-color: #1e1e1e;
@@ -40,14 +54,16 @@ body.dark-mode .nav-links li a {
 /* ===== Section Styling ===== */
 section {
   min-height: 100vh;
-  padding: 80px 20px 120px; /* bottom padding added to avoid fixed footer overlap */
+  padding: 80px 20px 120px;
+  /* bottom padding added to avoid fixed footer overlap */
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   overflow: hidden;
   scroll-snap-align: start;
-  scroll-margin-top: 100px; /* prevent hiding behind navbar */
+  scroll-margin-top: 100px;
+  /* prevent hiding behind navbar */
 }
 
 section:target {
@@ -258,6 +274,7 @@ body {
     width: 90%;
   }
 }
+
 /* === Scroll To Top Button === */
 .scroll-to-top {
   position: fixed;
@@ -319,6 +336,7 @@ body {
 .footer .social-icons a:hover {
   color: #e0e0e0;
 }
+
 /* Light Mode Footer (already exists) */
 .footer {
   background-color: var(--primary-color);
@@ -333,12 +351,16 @@ body.dark-mode .footer {
   background-color: #1e1e1e;
   color: var(--dark-text);
 }
+
 .contact {
-  padding-top: 100px; /* Ensures content is not behind navbar */
+  padding-top: 100px;
+  /* Ensures content is not behind navbar */
 }
+
 .navbar {
   z-index: 999;
 }
+
 @media (max-width: 768px) {
   .contact form {
     width: 90%;
@@ -349,6 +371,7 @@ body.dark-mode .footer {
     font-size: 1.8rem;
   }
 }
+
 /* ===== Contact Section Styling ===== */
 .contact {
   min-height: 100vh;
