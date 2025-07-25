@@ -25,10 +25,11 @@ jobs:
         run: npm run build -- --configuration=production
 
       - name: Deploy to Firebase Preview Channel
-        uses: FirebaseExtended/action-hosting-deploy@v0
-        with:
-          repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_TOKEN }}"
-          projectId: portfolio-sivabalakeerthick
-          channelId: "preview-${{ github.event.pull_request.number }}"
-          expires: 7d
+  uses: FirebaseExtended/action-hosting-deploy@v0
+  with:
+    repoToken: "${{ secrets.GITHUB_TOKEN }}"
+    firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+    projectId: portfolio-sivabalakeerthick
+    channelId: "preview-${{ github.event.pull_request.number }}"
+    expires: 7d
+
