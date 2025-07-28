@@ -41,6 +41,9 @@ body.dark-mode {
   /* fallback dark color */
 }
 
+body.dark-mode .github-logo {
+  filter: invert(1);
+}
 
 
 body.dark-mode .navbar {
@@ -130,6 +133,11 @@ li {
   height: 2px;
   background-color: var(--primary-color);
 }
+
+html {
+  scroll-behavior: smooth;
+}
+
 
 .theme-toggle {
   background: none;
@@ -246,6 +254,10 @@ li {
 html,
 body {
   scroll-snap-type: y mandatory;
+}
+
+section {
+  scroll-snap-align: none !important;
 }
 
 /* ===== Responsive Design ===== */
