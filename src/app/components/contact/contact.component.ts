@@ -42,15 +42,15 @@ export class ContactComponent {
           name: formData.name,
           email: formData.email
         }, 'sSOqcsUjoDSeZJZ8-')
-        .then(() => {
-          this.successMessage = 'Thank you for contacting me!';
-          this.contactForm.reset();
-          this.submitted = false;
-        })
-        .catch(error => {
-          console.error('Auto-reply error:', error);
-          this.errorMessage = 'There was a problem sending your confirmation email.';
-        });
+          .then(() => {
+            this.successMessage = 'Thank you for contacting me!';
+            this.contactForm.reset();
+            this.submitted = false;
+          })
+          .catch(error => {
+            console.error('Auto-reply error:', error);
+            this.errorMessage = 'There was a problem sending your confirmation email.';
+          });
 
       })
       .catch(error => {

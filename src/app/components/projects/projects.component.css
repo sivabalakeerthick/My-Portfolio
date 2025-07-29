@@ -1,14 +1,4 @@
 /* === Projects Section === */
-.projects {
-  min-height: 100vh;
-  padding: 120px 20px 80px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  scroll-snap-align: start;
-  background-color: var(--light-bg);
-  transition: background-color 0.3s;
-}
 
 .projects h2 {
   font-size: clamp(1.8rem, 4vw, 2.5rem);
@@ -23,47 +13,54 @@
   max-width: 1000px;
   width: 100%;
   padding: 0 20px;
+  margin: 0 auto;
 }
 
 .project-card {
-  background-color: #ffffff;
-  border-left: 4px solid var(--primary-color);
+  background-color: #f9f9ff;
+  /* Soft pastel background */
+  border-left: 5px solid var(--primary-color);
   padding: 20px 25px;
-  border-radius: 10px;
-  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
-  transition: transform 0.3s ease, background-color 0.3s;
+  border-radius: 15px;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
   text-align: left;
 }
 
 .project-card:hover {
-  transform: translateY(-5px);
+  transform: translateY(-8px);
+  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
 }
 
 .project-card h3 {
-  font-size: 1.2rem;
-  margin-bottom: 10px;
-  color: var(--primary-color);
+  font-size: 1.3rem;
+  margin-bottom: 12px;
+  color: #000;
+  /* Black in light mode */
+  font-weight: 600;
 }
 
 .project-card p {
   font-size: 0.95rem;
-  color: var(--light-text);
+  color: #555;
+  /* Medium gray */
   margin-bottom: 15px;
 }
 
 .project-card a {
   display: inline-block;
   text-decoration: none;
-  font-weight: bold;
+  font-weight: 600;
   color: var(--primary-color);
   border: 2px solid var(--primary-color);
-  padding: 6px 14px;
-  border-radius: 6px;
+  padding: 8px 16px;
+  border-radius: 8px;
   transition: all 0.3s ease;
+  font-size: 0.9rem;
 }
 
 .project-card a:hover {
-  background-color: var(--primary-color);
+  background-color: var(--secondary-color, #0056b3);
   color: white;
 }
 
@@ -76,6 +73,10 @@ body.dark-mode .project-card {
   background-color: #1e1e1e;
   color: var(--dark-text);
   border-left-color: var(--primary-color);
+}
+
+body.dark-mode .project-card h3 {
+  color: var(--primary-color);
 }
 
 body.dark-mode .project-card p {
