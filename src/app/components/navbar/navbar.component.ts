@@ -6,7 +6,7 @@ import { Component, HostListener } from '@angular/core';
   styleUrls: ['./navbar.component.css']
 })
 export class NavbarComponent {
-  isDarkMode = false;
+  isDarkMode = true;
   activeSection = 'home';
 
   @HostListener('window:scroll', [])
