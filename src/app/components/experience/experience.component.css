@@ -1,62 +1,91 @@
-/* === EXPERIENCE SECTION HEADING === */
-.experience h2 {
-  font-size: clamp(1.8rem, 4vw, 2.5rem);
-  color: var(--primary-color);
-  margin-bottom: 30px;
+/* ================================
+   EXPERIENCE SECTION
+================================ */
+
+.experience-section {
+  padding: 80px 16px 140px;
   text-align: center;
 }
 
-/* === EXPERIENCE GRID === */
-.experience-grid {
+.section-title {
+  font-size: clamp(1.6rem, 4vw, 2.3rem);
+  color: #22d3ee;
+  margin-bottom: 40px;
+}
+
+/* ================================
+   CAROUSEL GRID (KEY FIX)
+================================ */
+
+.carousel-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 30px;
-  max-width: 1000px;
-  width: 100%;
-  padding: 0 20px;
+  grid-template-columns: 48px 1fr 48px;
+  align-items: center;
+  max-width: 560px;
   margin: 0 auto;
+  gap: 12px;
 }
 
-/* === EXPERIENCE CARD === */
+/* ================================
+   ARROWS (NO ABSOLUTE)
+================================ */
+
+.arrow {
+  background: none;
+  border: none;
+  font-size: 2.2rem;
+  color: #22d3ee;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.arrow:hover {
+  transform: scale(1.2);
+  color: #38bdf8;
+}
+
+/* ================================
+   EXPERIENCE CARD
+================================ */
+
 .experience-card {
+  width: 100%;
   background-color: #f9f9ff;
-  border-left: 5px solid var(--primary-color);
-  padding: 20px 25px;
-  border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border-left: 5px solid #00bcd4;
+  padding: 22px 20px;
+  border-radius: 16px;
   text-align: left;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  animation: fadeIn 0.35s ease;
 }
 
-.experience-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 12px 25px rgba(0, 0, 0, 0.1);
-}
+/* TEXT */
 
-/* === EXPERIENCE CARD TEXT === */
-.experience-card h3 {
-  font-size: 1.3rem;
-  margin-bottom: 12px;
-  color: #000;
-  font-weight: 600;
-}
-
-.experience-card .company {
-  font-size: 1rem;
+.position {
+  font-size: 1.25rem;
+  color: #111827;
   font-style: italic;
-  color: var(--text-muted);
-  margin-bottom: 6px;
-  display: block;
 }
 
-.experience-card .duration-location {
-  font-size: 0.9rem;
-  color: var(--text-secondary);
+.total-exp,.company,.duration-location,.role {
+  color: #000000;
+  margin-left: 4px;
+  display: block;
+  font-weight: 500;
+  font-size: 0.95rem;
+  font-style: italic;
+  margin: 6px 0;
+}
+
+/* .duration-location {
+  font-size: 0.85rem;
+  color: #9ca3af;
   margin-bottom: 12px;
   display: block;
-}
+} */
 
-/* RESPONSIBILITIES LIST */
+/* LIST */
+
 .experience-card ul {
   list-style: none;
   padding-left: 0;
@@ -66,49 +95,59 @@
   position: relative;
   padding-left: 1.2rem;
   margin-bottom: 0.6rem;
-  color: var(--text-body);
-  line-height: 1.6;
+  color: #374151;
 }
 
 .experience-card ul li::before {
   content: "•";
   position: absolute;
   left: 0;
-  color: var(--primary-color);
-  font-size: 1.2rem;
+  color: #00bcd4;
 }
 
-/* === THEME VARIABLES === */
-:root {
-  --primary-color: #4f46e5;
-  --card-bg: #f9f9ff;
-  --text-body: #333;
-  --text-muted: #6c757d;
-  --text-secondary: #999;
-  --dark-bg: #121212;
-  --dark-text: #ddd;
+/* ================================
+   MOBILE SAFETY
+================================ */
+
+@media (max-width: 480px) {
+  .carousel-grid {
+    grid-template-columns: 36px 1fr 36px;
+  }
 }
 
-/* === DARK MODE === */
-body.dark-mode .experience {
-  background-color: var(--dark-bg);
+/* ================================
+   ANIMATION
+================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
+
+/* ================================
+   DARK MODE
+================================ */
 
 body.dark-mode .experience-card {
   background-color: #1e1e1e;
-  border-left-color: var(--primary-color);
-  color: var(--dark-text);
+  color: #e5e7eb;
 }
 
-body.dark-mode .experience-card h3 {
-  color: var(--primary-color);
+body.dark-mode .position {
+  color: #60a5fa;
 }
 
-body.dark-mode .experience-card .company,
-body.dark-mode .experience-card .duration-location {
-  color: #aaa;
+body.dark-mode .company,
+body.dark-mode .duration-location {
+  color: #cbd5f5;
 }
 
 body.dark-mode .experience-card ul li {
-  color: #ccc;
+  color: #d1d5db;
 }

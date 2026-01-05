@@ -1,27 +1,45 @@
-# Portfolio
+<h1 align="center">Welcome to portfolio 👋</h1>
+<p>
+  <a href="https://www.npmjs.com/package/portfolio" target="_blank">
+    <img alt="Version" src="https://img.shields.io/npm/v/portfolio.svg">
+  </a>
+</p>
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 16.2.16.
+### ✨ [Demo](https://portfolio-sivabalakeerthick.web.app/)
 
-## Development server
+## Install
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+```sh
+npm install
+```
 
-## Code scaffolding
+## Usage
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+```sh
+npm run start
+```
 
-## Build
+## Run tests
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
+```sh
+npm run test
+```
 
-## Running unit tests
+## Author
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+👤 **Siva Bala Keerthick G**
 
-## Running end-to-end tests
+* Website: https://portfolio-sivabalakeerthick.web.app/
+* Github: [@sivabalakeerthick](https://github.com/sivabalakeerthick)
+* LinkedIn: [@Siva Bala Keerthick G ](https://linkedin.com/in/Siva Bala Keerthick G )
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+## Show your support
 
-## Further help
+Give a ⭐️ if this project helped you!
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli)  page.
+<a href="https://www.patreon.com/sivabalakeerthick">
+  <img src="https://c5.patreon.com/external/logo/become_a_patron_button@2x.png" width="160">
+</a>
+
+***
+_This README was generated with ❤️ by [readme-md-generator](https://github.com/kefranabg/readme-md-generator)_

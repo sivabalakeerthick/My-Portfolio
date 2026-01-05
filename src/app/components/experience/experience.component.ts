@@ -1,17 +1,32 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
+
+interface Experience {
+  position: string;
+  role: string;
+  company: string;
+  startDate: Date;
+  endDate: Date | null;
+  location: string;
+  responsibilities: string[];
+}
 
 @Component({
   selector: 'app-experience',
   templateUrl: './experience.component.html',
   styleUrls: ['./experience.component.css']
 })
-export class ExperienceComponent implements OnInit {
-  experiences = [
+export class ExperienceComponent {
+
+  currentIndex = 0;
+
+  experiences: Experience[] = [
     {
-      role: 'Java Full Stack Developer Intern',
+      position: 'Programmer Analyst Trainee',
+      role: 'Frontend Developer',
       company: 'Cognizant',
-      duration: 'April 2025 – July 2025(3 months)',
-      location: 'Hyderabad, India',
+      startDate: new Date(2025, 6),
+      endDate: null,
+      location: 'Bengaluru, India',
       responsibilities: [
         'Worked on a project as a team',
         'Worked on Spring Boot & REST API integrations',
@@ -19,9 +34,61 @@ export class ExperienceComponent implements OnInit {
         'Collaborated in Agile environment and Git'
       ]
     },
+    {
+      position: 'Intern',
+      role: 'Full Stack Developer', 
+      company: 'Cognizant',
+      startDate: new Date(2025, 3),
+      endDate: new Date(2025, 6),
+      location: 'Hyderabad, India',
+      responsibilities: [
+        'Worked on a project as a team',
+        'Worked on Spring Boot & REST API integrations',
+        'Built responsive UI with Angular',
+        'Collaborated in Agile environment and Git'
+      ]
+    }
   ];
 
-  constructor() {}
+  getMonths(exp: Experience): number {
+    const end = exp.endDate ?? new Date();
+    return (
+      (end.getFullYear() - exp.startDate.getFullYear()) * 12 +
+      (end.getMonth() - exp.startDate.getMonth())
+    );
+  }
 
-  ngOnInit(): void {}
+  getDuration(exp: Experience): string {
+    const start = exp.startDate.toLocaleString('default', {
+      month: 'long',
+      year: 'numeric'
+    });
+
+    const end = exp.endDate
+      ? exp.endDate.toLocaleString('default', {
+          month: 'long',
+          year: 'numeric'
+        })
+      : 'Present';
+
+    return `${start} – ${end} (${this.getMonths(exp)} months)`;
+  }
+
+  getTotalExperience(): number {
+    return this.experiences.reduce(
+      (sum, exp) => sum + this.getMonths(exp),
+      0
+    );
+  }
+
+  prev(): void {
+    this.currentIndex =
+      (this.currentIndex - 1 + this.experiences.length) %
+      this.experiences.length;
+  }
+
+  next(): void {
+    this.currentIndex =
+      (this.currentIndex + 1) % this.experiences.length;
+  }
 }

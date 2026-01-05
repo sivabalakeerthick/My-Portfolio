@@ -5,6 +5,12 @@
 <app-projects id="projects"></app-projects>
 <app-education id="education"></app-education>
 <app-contact id="contact"></app-contact>
-<button class="scroll-to-top" (click)="scrollToTop()" title="Back to Top">&#8593;</button>
-
+<button
+  id="scroll-to-top"
+  class="scroll-to-top"
+  *ngIf="showScrollButton"
+  (click)="scrollToTop()"
+  title="Back to Top">
+  &#8593;
+</button>
 <app-footer></app-footer>
