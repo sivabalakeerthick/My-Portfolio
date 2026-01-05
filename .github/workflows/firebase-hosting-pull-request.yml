@@ -1,16 +1,14 @@
-name: Deploy Preview on Pull Request
+name: Deploy to Firebase Hosting Preview (PR)
 
 on:
   pull_request:
-    branches:
-      - main
 
 jobs:
   build_and_preview:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v3
 
       - name: Setup Node.js
@@ -18,18 +16,17 @@ jobs:
         with:
           node-version: 20
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: npm install
 
-      - name: Build Angular Project
+      - name: Build Angular app
         run: npm run build -- --configuration=production
 
-      - name: Deploy to Firebase Preview Channel
-  uses: FirebaseExtended/action-hosting-deploy@v0
-  with:
-    repoToken: "${{ secrets.GITHUB_TOKEN }}"
-    firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
-    projectId: portfolio-sivabalakeerthick
-    channelId: "preview-${{ github.event.pull_request.number }}"
-    expires: 7d
-
+      - name: Deploy to Firebase Hosting Preview
+        uses: FirebaseExtended/action-hosting-deploy@v0
+        with:
+          repoToken: "${{ secrets.GITHUB_TOKEN }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+          projectId: portfolio-sivabalakeerthick
+          channelId: pr-${{ github.event.pull_request.number }}
+          expires: 7d
