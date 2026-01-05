@@ -3,6 +3,11 @@ name: Deploy to Firebase Hosting Preview (PR)
 on:
   pull_request:
 
+permissions:
+  checks: write
+  contents: read
+  pull-requests: write
+
 jobs:
   build_and_preview:
     runs-on: ubuntu-latest
