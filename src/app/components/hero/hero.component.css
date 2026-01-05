@@ -74,14 +74,15 @@ body {
 
 .hero-buttons {
   margin-top: 30px;
-  display: flex;
-  flex-direction: column;
+  /* display: flex;
+  flex-direction: column; */
   gap: 14px;
   align-items: center;
 }
 
 .resume-btn {
   display: inline-block;
+  margin: 0px 10px;
   padding: 12px 24px;
   background: var(--primary-color);
   color: white;

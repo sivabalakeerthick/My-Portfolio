@@ -1,37 +1,71 @@
+/* ================================
+   PROJECTS SECTION
+================================ */
+
 .projects {
-  padding: 80px 20px;
+  padding: 80px 16px 140px;
   text-align: center;
   scroll-margin-top: 80px;
 }
 
 .project-title {
-  font-size: 2rem;
+  font-size: clamp(1.6rem, 4vw, 2.3rem);
   color: #00cfff;
   margin-bottom: 40px;
 }
 
+/* ================================
+   CAROUSEL GRID (KEY FIX)
+================================ */
+
 .project-carousel {
-  display: flex;
+  display: grid;
+  grid-template-columns: 48px 1fr 48px;
   align-items: center;
-  justify-content: center;
-  flex-wrap: nowrap;
-  gap: 20px;
+  max-width: 560px;
+  margin: 0 auto;
+  gap: 12px;
 }
 
+/* ================================
+   ARROWS (NO ABSOLUTE)
+================================ */
+
+.arrow-button {
+  background: none;
+  border: none;
+  color: #00cfff;
+  font-size: 2.2rem;
+  cursor: pointer;
+  transition: transform 0.2s ease, color 0.2s ease;
+}
+
+.arrow-button:hover {
+  transform: scale(1.2);
+  color: #26bfe2;
+}
+
+/* ================================
+   PROJECT CARD
+================================ */
+
 .project-card {
-  width: 300px;
-  height: 250px;
+  width: 100%;
+  max-width: 520px;
+  min-height: 250px;
   background-color: #f9f9ff;
   border-left: 5px solid #00cfff;
   padding: 20px;
   border-radius: 15px;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.07);
+  text-align: left;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  transition: transform 0.3s ease;
-  position: relative;
+  animation: fadeIn 0.35s ease;
 }
+
+/* TEXT */
 
 .project-card h3 {
   font-size: 1.1rem;
@@ -42,54 +76,71 @@
 .project-card p {
   font-size: 0.95rem;
   color: #444;
+  line-height: 1.5;
 }
 
+/* BUTTON */
+
 .project-card a {
-  margin: 10px auto 0 auto;
-  /* top margin + auto left/right centers it */
+  margin: 12px auto 0;
   text-decoration: none;
   color: #00cfff;
   border: 2px solid #00cfff;
-  padding: 6px 14px;
+  padding: 6px 16px;
   border-radius: 8px;
   font-weight: 500;
-  transition: background-color 0.3s;
-  display: block;
+  transition: background-color 0.3s ease, color 0.3s ease;
   width: fit-content;
-  cursor: pointer;
 }
-
 
 .project-card a:hover {
-  background-color: #26bfe2 !important;
-  color: #fff !important;
+  background-color: #26bfe2;
+  color: #fff;
 }
 
+/* ================================
+   MOBILE SAFETY
+================================ */
 
-.arrow-button {
-  background: none;
-  border: none;
-  color: #00cfff;
-  font-size: 2rem;
-  cursor: pointer;
-  transition: transform 0.2s ease;
-}
-
-.arrow-button:hover {
-  transform: scale(1.2);
-}
-
-@media (max-width: 600px) {
+@media (max-width: 480px) {
   .project-carousel {
-    flex-direction: column;
-  }
-
-  .arrow-button {
-    font-size: 1.5rem;
+    grid-template-columns: 36px 1fr 36px;
   }
 
   .project-card {
-    width: 90vw;
-    height: 270px;
+    min-height: 270px;
+    padding: 18px;
   }
+}
+
+/* ================================
+   ANIMATION
+================================ */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ================================
+   DARK MODE
+================================ */
+
+body.dark-mode .project-card {
+  background-color: #1e1e1e;
+  color: #e5e7eb;
+}
+
+body.dark-mode .project-card h3 {
+  color: #60a5fa;
+}
+
+body.dark-mode .project-card p {
+  color: #d1d5db;
 }

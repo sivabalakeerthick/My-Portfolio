@@ -12,6 +12,8 @@ import { SkillsComponent } from './components/skills/skills.component';
 import { ContactComponent } from './components/contact/contact.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { ExperienceComponent } from './components/experience/experience.component';
+import { HttpClientModule } from '@angular/common/http';
+
 
 @NgModule({
   declarations: [
@@ -23,11 +25,12 @@ import { ExperienceComponent } from './components/experience/experience.componen
     SkillsComponent,
     ContactComponent,
     FooterComponent,
-    ExperienceComponent
-  ],
+    ExperienceComponent,
+    ],
   imports: [
     BrowserModule,
     AppRoutingModule,
+    HttpClientModule,
     ReactiveFormsModule // ✅ Required for formGroup
   ],
   providers: [],
