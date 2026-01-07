@@ -73,7 +73,7 @@ section:target {
   scroll-margin-top: 100px;
 }
 
-h2 {
+h1,h2 {
   font-size: clamp(1.8rem, 4vw, 2.5rem);
   margin-bottom: 20px;
   color: var(--primary-color);
@@ -244,7 +244,6 @@ html {
 .about p,
 .education p,
 .skills p,
-.projects p,
 .contact p {
   max-width: 800px;
   margin: 0 auto;

@@ -88,9 +88,8 @@ body.dark-mode .nav-links li a.active::after {
 /* =====================
    RESPONSIVE NAVBAR
 ===================== */
-@media (max-width: 768px) {
+@media (max-width:480px) {
   .navbar {
-
     align-items: flex-start;
     padding: 1rem;
   }

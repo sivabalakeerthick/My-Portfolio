@@ -1,12 +1,19 @@
 <section id="projects" class="projects" data-aos="zoom-in">
-  <h2 class="project-title">Projects</h2>
+  <h1 class="project-title">Projects</h1>
 
   <div class="project-carousel">
     <button class="arrow-button" (click)="prevProject()">&#x25C0;</button>
 
     <div class="project-card">
-      <h3>{{ projects[currentIndex].title }}</h3>
-      <p><i>{{ projects[currentIndex].techStack }}</i></p>
+      <h2>{{ projects[currentIndex].title }}</h2>
+      <p>{{ projects[currentIndex].description }}</p>
+      <h2>Tech Stack:</h2>
+      <p>{{ projects[currentIndex].techStack }}</p>
+      <!-- <ul>
+        <li *ngFor="let task of projects[currentIndex].techStack">
+          {{ task }}
+        </li>
+      </ul> -->
       <a [href]="projects[currentIndex].link" target="_blank">View</a>
     </div>
 

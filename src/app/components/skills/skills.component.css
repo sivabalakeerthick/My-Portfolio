@@ -35,11 +35,21 @@ body.dark-mode .github-logo {
   filter: invert(1);
 }
 
-
+.divider {
+  display: grid !important;
+  grid-template-columns: repeat(3,1fr);
+  gap: 30px;
+  margin-top: 40px;
+  align-items: start;
+}
 @media (max-width: 768px) {
   .skills-row {
-    justify-content: flex-start;
+    justify-content: center;
     flex-wrap: wrap;
+  }
+
+  .divider .skill-category h3 {
+    min-height: 55px;
   }
 
   .skills-row img {
