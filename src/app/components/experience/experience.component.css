@@ -124,6 +124,12 @@
   .carousel-grid {
     grid-template-columns: 36px 1fr 36px;
   }
+  .experience-card {
+    height: auto;
+    width: 100%;
+    min-height: 270px;
+    padding: 18px;
+  }
 }
 
 /* ================================
