@@ -21,7 +21,7 @@
   display: grid;
   grid-template-columns: 48px 1fr 48px;
   align-items: center;
-  max-width: 560px;
+  max-width: 700px;
   margin: 0 auto;
   gap: 12px;
 }
@@ -49,7 +49,10 @@
 ================================ */
 
 .experience-card {
-  width: 100%;
+  width: 550px;
+  height: 350px;
+  max-width: 600px;
+  min-height: 250px;
   background-color: #f9f9ff;
   border-left: 5px solid #00bcd4;
   padding: 22px 20px;
@@ -60,20 +63,27 @@
 }
 
 /* TEXT */
+.experience-card h2 {
+  text-align: left;
+  margin-bottom: 0;
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: #000;
+}
 
 .position {
   font-size: 1.25rem;
   color: #111827;
-  font-style: italic;
+  /* font-style: italic; */
 }
 
 .total-exp,.company,.duration-location,.role {
   color: #000000;
   margin-left: 4px;
   display: block;
-  font-weight: 500;
+  font-weight: 700;
   font-size: 0.95rem;
-  font-style: italic;
+  /* font-style: italic; */
   margin: 6px 0;
 }
 
@@ -93,6 +103,7 @@
 
 .experience-card ul li {
   position: relative;
+  font-weight: 600;
   padding-left: 1.2rem;
   margin-bottom: 0.6rem;
   color: #374151;

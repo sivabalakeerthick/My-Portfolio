@@ -13,10 +13,9 @@ interface Experience {
 @Component({
   selector: 'app-experience',
   templateUrl: './experience.component.html',
-  styleUrls: ['./experience.component.css']
+  styleUrls: ['./experience.component.css'],
 })
 export class ExperienceComponent {
-
   currentIndex = 0;
 
   experiences: Experience[] = [
@@ -28,26 +27,26 @@ export class ExperienceComponent {
       endDate: null,
       location: 'Bengaluru, India',
       responsibilities: [
-        'Worked on a project as a team',
-        'Worked on Spring Boot & REST API integrations',
-        'Built responsive UI with Angular',
-        'Collaborated in Agile environment and Git'
-      ]
+        'Developed and maintained Angular-based UI components for an enterprise insurance application',
+        'Debugged and resolved UI and logical defects, improving application stability and user experience',
+        'Contributed to Angular version migration, addressing compatibility issues and reducing technical debt',
+        'Collaborated with cross-functional teams in an Agile environment to deliver business-aligned solutions',
+      ],
     },
     {
       position: 'Intern',
-      role: 'Full Stack Developer', 
+      role: 'Full Stack Developer',
       company: 'Cognizant',
       startDate: new Date(2025, 3),
       endDate: new Date(2025, 6),
       location: 'Hyderabad, India',
       responsibilities: [
-        'Worked on a project as a team',
-        'Worked on Spring Boot & REST API integrations',
-        'Built responsive UI with Angular',
-        'Collaborated in Agile environment and Git'
-      ]
-    }
+        'Worked as part of a development team to build and enhance full-stack features using Angular and Spring Boot',
+        'Developed responsive frontend components using Angular and TypeScript, ensuring consistency across different screen sizes',
+        'Implemented and integrated RESTful APIs using Spring Boot to support frontend functionality',
+        'Used Git for version control and collaborated in an Agile development environment with regular sprint activities',
+      ],
+    },
   ];
 
   getMonths(exp: Experience): number {
@@ -61,13 +60,13 @@ export class ExperienceComponent {
   getDuration(exp: Experience): string {
     const start = exp.startDate.toLocaleString('default', {
       month: 'long',
-      year: 'numeric'
+      year: 'numeric',
     });
 
     const end = exp.endDate
       ? exp.endDate.toLocaleString('default', {
           month: 'long',
-          year: 'numeric'
+          year: 'numeric',
         })
       : 'Present';
 
@@ -75,10 +74,7 @@ export class ExperienceComponent {
   }
 
   getTotalExperience(): number {
-    return this.experiences.reduce(
-      (sum, exp) => sum + this.getMonths(exp),
-      0
-    );
+    return this.experiences.reduce((sum, exp) => sum + this.getMonths(exp), 0);
   }
 
   prev(): void {
@@ -88,7 +84,6 @@ export class ExperienceComponent {
   }
 
   next(): void {
-    this.currentIndex =
-      (this.currentIndex + 1) % this.experiences.length;
+    this.currentIndex = (this.currentIndex + 1) % this.experiences.length;
   }
 }
