@@ -42,12 +42,14 @@ body.dark-mode .github-logo {
   margin-top: 40px;
   align-items: start;
 }
-
-
 @media (max-width: 768px) {
   .skills-row {
     justify-content: center;
     flex-wrap: wrap;
+  }
+
+  .divider .skill-category h3 {
+    min-height: 55px;
   }
 
   .skills-row img {
