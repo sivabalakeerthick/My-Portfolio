@@ -117,6 +117,8 @@
   }
 
   .project-card {
+    height: auto;
+    width: 100%;
     min-height: 270px;
     padding: 18px;
   }
@@ -152,4 +154,108 @@ body.dark-mode .project-card h2 {
 
 body.dark-mode .project-card p {
   color: #d1d5db;
+}
+.project-card {
+  box-sizing: border-box;
+  overflow: hidden;
+}
+/* word breaking out of grid fix */
+/* .project-card h2, */
+.project-card p {
+  max-width: 100%;
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+/* ================================
+   PROJECTS – 360px MOBILE FIX
+================================ */
+@media (max-width: 360px) {
+
+  /* Section spacing */
+  .projects {
+    padding: 60px 12px 90px;
+    scroll-margin-top: 60px;
+  }
+
+  /* Title */
+  .project-title {
+    font-size: 1.35rem;
+    margin-bottom: 24px;
+  }
+
+  /* Carousel grid (keep arrows visible) */
+  .project-carousel {
+    grid-template-columns: 32px 1fr 32px;
+    gap: 8px;
+    max-width: 100%;
+  }
+
+  /* Arrows */
+  .arrow-button {
+    font-size: 1rem;
+  }
+
+  /* Project card */
+  .project-card {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    /* ✅ critical */
+    min-height: unset;
+    /* ✅ remove force */
+    max-height: 78vh;
+    /* ✅ prevent overflow */
+    overflow-y: auto;
+
+    padding: 14px;
+    border-radius: 14px;
+  }
+
+  /* Card text */
+  .project-card h2 {
+    font-size: 1.05rem;
+    margin-bottom: 6px;
+  }
+
+  .project-card p {
+    font-size: 0.82rem;
+    line-height: 1.45;
+  }
+
+  /* Button */
+  .project-card a {
+    font-size: 0.8rem;
+    padding: 6px 14px;
+    margin-top: 10px;
+  }
+}
+/* ================================
+   PROJECT ARROW FIX – 390px to 412px
+================================ */
+/* ======================================
+   PROJECT ARROW CLIP – HARD FIX
+   (390px–420px range)
+====================================== */
+@media (min-width: 360px) and (max-width: 420px) {
+
+  /* 🔑 allow arrows to escape container */
+  .projects,
+  .project-carousel {
+    overflow: visible !important;
+  }
+
+  /* 🔑 prevent grid from exceeding viewport */
+  .project-carousel {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 0 10px;
+    grid-template-columns: 40px minmax(0, 1fr) 40px;
+  }
+
+  /* 🔑 ensure arrows stay inside viewport */
+  .arrow-button {
+    justify-self: center;
+    z-index: 5;
+  }
 }
