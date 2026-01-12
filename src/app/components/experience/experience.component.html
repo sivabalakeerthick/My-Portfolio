@@ -1,14 +1,44 @@
 <section class="experience-section" id="experience" data-aos="zoom-in">
-  <h2 class="section-title">Experience</h2>
+  <h1 class="section-title">Experience</h1>
 
-  <div *ngFor="let exp of experiences" class="experience-card">
-    <div class="experience-header">
-      <h3 class="role">{{ exp.role }}</h3>
-      <span class="company">{{ exp.company }}</span>
-      <span class="duration-location">{{ exp.duration }} • {{ exp.location }}</span>
+  <!-- GRID reserves arrow space -->
+  <div class="carousel-grid">
+    <!-- LEFT ARROW -->
+    <button class="arrow" (click)="prev()">&#9664;</button>
+
+    <!-- CARD -->
+    <div class="experience-card">
+      <h2 class="position">
+        {{ experiences[currentIndex].position }}
+        - {{ experiences[currentIndex].company }}
+      </h2>
+
+      <span class="duration-location">
+        {{ getDuration(experiences[currentIndex]) }}  
+        •{{ experiences[currentIndex].location }}
+      </span>
+
+      <span class="total-exp">
+          Total Experience: {{ getTotalExperience() }} months
+      </span>
+
+      <span class="role">
+          Role: {{ experiences[currentIndex].role  }}
+      </span>
+
+      <!-- <span class="company">
+        {{ experiences[currentIndex].company }}
+      </span> -->
+
+
+      <ul>
+        <li *ngFor="let task of experiences[currentIndex].responsibilities">
+          {{ task }}
+        </li>
+      </ul>
     </div>
-    <ul class="responsibilities">
-      <li *ngFor="let task of exp.responsibilities">{{ task }}</li>
-    </ul>
+
+    <!-- RIGHT ARROW -->
+    <button class="arrow" (click)="next()">&#9654;</button>
   </div>
 </section>

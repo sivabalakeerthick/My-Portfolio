@@ -4,13 +4,6 @@
   transition: background-color 0.3s ease;
 }
 
-.section-title {
-  text-align: center;
-  font-size: 2.2rem;
-  margin-bottom: 40px;
-  color: var(--text-color);
-}
-
 .card-grid {
   display: flex;
   flex-direction: column;
@@ -28,6 +21,7 @@
   box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
   width: 100%;
   min-height: 130px;
+  max-height: 130px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -48,15 +42,12 @@
 .education-card p {
   font-size: 0.95rem;
   color: #333;
+  font-weight: 600;
   margin-bottom: 6px;
 }
 
 body.dark-mode .section {
   background-color: #121212;
-}
-
-body.dark-mode .section-title {
-  color: #eee;
 }
 
 body.dark-mode .education-card {

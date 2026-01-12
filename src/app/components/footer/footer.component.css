@@ -12,3 +12,7 @@ body.dark-mode footer {
   color: var(--dark-text);
   border-top: 1px solid #444;
 }
+
+a{
+  color:#00bcd4;
+}

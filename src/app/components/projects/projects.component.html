@@ -1,25 +1,22 @@
 <section id="projects" class="projects" data-aos="zoom-in">
-  <h2>Projects</h2>
-  <div class="project-grid">
+  <h1 class="project-title">Projects</h1>
+
+  <div class="project-carousel">
+    <button class="arrow-button" (click)="prevProject()">&#x25C0;</button>
+
     <div class="project-card">
-      <h3>Inventory Management System (Full Stack)</h3>
-      <p><i>Angular, TypeScript, Spring Boot, Java, JavaScript, MySQL, GitHub, Git</i></p>
-      <a href="https://github.com/sivabalakeerthick/InventoryManagementSystem" target="_blank">View</a>
+      <h2>{{ projects[currentIndex].title }}</h2>
+      <p>{{ projects[currentIndex].description }}</p>
+      <h2>Tech Stack:</h2>
+      <p>{{ projects[currentIndex].techStack }}</p>
+      <!-- <ul>
+        <li *ngFor="let task of projects[currentIndex].techStack">
+          {{ task }}
+        </li>
+      </ul> -->
+      <a [href]="projects[currentIndex].link" target="_blank">View</a>
     </div>
-    <div class="project-card">
-      <h3>Chrome Homepage Clone (Front End)</h3>
-      <p><i>HTML, CSS, JavaScript, OpenWeatherMap API</i></p>
-      <a href="https://github.com/sivabalakeerthick/custom-chrome-startup-page" target="_blank">View</a>
-    </div>
-    <div class="project-card">
-      <h3>Bank Insights Dashboard (Analytics)</h3>
-      <p><i>Power BI</i></p>
-      <a href="https://github.com/sivabalakeerthick/Bank-Customer-Insights-Dashboard" target="_blank">View</a>
-    </div>
-    <div class="project-card">
-      <h3>Brain Tumour Prediction (Data Analysis)</h3>
-      <p><i>Python, Pandas, NumPy, Matplotlib</i></p>
-      <a href="https://github.com/sivabalakeerthick/Brain-tumour-Prediction" target="_blank">View</a>
-    </div>
+
+    <button class="arrow-button" (click)="nextProject()">&#x25B6;</button>
   </div>
 </section>
