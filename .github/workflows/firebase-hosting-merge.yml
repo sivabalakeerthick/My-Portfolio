@@ -5,21 +5,26 @@ on:
     branches:
       - main
 
+permissions:
+  checks: write
+  contents: read
+  deployments: write
+
 jobs:
   build_and_deploy:
     runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
 
       - name: Install Dependencies
-        run: npm install
+        run: npm ci
 
       - name: Build Angular App
         run: npm run build -- --configuration=production
@@ -28,6 +33,6 @@ jobs:
         uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: "${{ secrets.GITHUB_TOKEN }}"
-          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT }}"
+          firebaseServiceAccount: "${{ secrets.FIREBASE_SERVICE_ACCOUNT || secrets.FIREBASE_SERVICE_ACCOUNT_PORTFOLIO_SIVABALAKEERTHICK || secrets.FIREBASE_SERVICE_ACCOUNT_MY_APPLICATION1_19358 }}"
           channelId: live
           projectId: portfolio-sivabalakeerthick
