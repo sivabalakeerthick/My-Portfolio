@@ -3,7 +3,6 @@ import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { AbstractControl, FormBuilder, FormGroup, ReactiveFormsModule, ValidationErrors, ValidatorFn, Validators } from '@angular/forms';
 import { firstValueFrom } from 'rxjs';
-import emailjs from '@emailjs/browser';
 import { environment } from '../../../environments/environment';
 
 export function disallowOwnerEmailValidator(): ValidatorFn {
@@ -189,88 +188,39 @@ export class ContactComponent implements OnDestroy {
 
     this.isSubmitting = true;
     const isHighImportance = formData.importance === 'high';
-
-    // 1. Try Secure Backend API First
-    const apiUrl = environment.apiUrl;
-    if (apiUrl) {
-      try {
-        const response: any = await firstValueFrom(
-          this.http.post(`${apiUrl}/api/contact`, {
-            name: formData.name,
-            email: formData.email,
-            importance: formData.importance,
-            message: formData.message,
-            website: formData.website || ''
-          })
-        );
-        this.lastSubmissionAt = Date.now();
-        this.successMessage =
-          response?.message ||
-          (isHighImportance
-            ? 'High Importance message dispatched! Your priority request has been sent to my urgent inbox.'
-            : 'Thank you for reaching out! Your message was sent successfully. I will get back to you shortly.');
-        this.contactForm.reset({ importance: 'normal', website: '' });
-        this.submitted = false;
-        this.isSubmitting = false;
-        return;
-      } catch (backendErr: any) {
-        console.warn('Backend contact API unavailable, attempting EmailJS fallback:', backendErr);
-      }
-    }
-
-    // 2. EmailJS Fallback
-    const emailPayload = {
-      name: formData.name,
-      email: formData.email,
-      priority: isHighImportance ? 'HIGH IMPORTANCE (URGENT)' : 'Normal',
-      importance_badge: isHighImportance ? '🚨 HIGH IMPORTANCE' : 'Standard',
-      message: isHighImportance
-        ? `[PRIORITY: HIGH IMPORTANCE / URGENT INQUIRY]\n\n${formData.message}`
-        : formData.message
-    };
+    const apiUrl = environment.apiUrl || 'http://localhost:5000';
 
     try {
-      await emailjs.send(
-        environment.emailjs.serviceId,
-        environment.emailjs.adminTemplateId,
-        emailPayload,
-        environment.emailjs.publicKey
+      const response: any = await firstValueFrom(
+        this.http.post(`${apiUrl}/api/contact`, {
+          name: formData.name,
+          email: formData.email,
+          importance: formData.importance,
+          message: formData.message,
+          website: formData.website || ''
+        })
       );
-      this.lastSubmissionAt = Date.now();
 
-      this.successMessage = isHighImportance
-        ? 'High Importance message dispatched! Your priority request has been sent to my urgent inbox.'
-        : 'Thank you for reaching out! Your message was sent successfully. I will get back to you shortly.';
+      this.lastSubmissionAt = Date.now();
+      this.successMessage =
+        response?.message ||
+        (isHighImportance
+          ? 'High Importance message dispatched! Your priority request has been sent to my urgent inbox.'
+          : 'Thank you for reaching out! Your message was sent successfully. I will get back to you shortly.');
       this.contactForm.reset({ importance: 'normal', website: '' });
       this.submitted = false;
-
-      // Optional user auto-reply (best-effort)
-      emailjs.send(
-        environment.emailjs.serviceId,
-        environment.emailjs.replyTemplateId,
-        { name: formData.name, email: formData.email },
-        environment.emailjs.publicKey
-      ).catch(replyErr => {
-        console.warn('Auto-reply delivery error:', replyErr);
-      });
     } catch (error: any) {
-      console.error('EmailJS submission error:', error);
+      console.error('Contact submission error:', error);
       this.mailtoFallbackUrl = this.getMailtoLink(formData);
       this.gmailWebUrl = this.getGmailWebLink(formData);
 
-      const errStatus = error?.status;
-      const rawText = error?.text || error?.message || (typeof error === 'string' ? error : '');
-      const errText = rawText.toLowerCase();
-
-      if (errStatus === 412 || errText.includes('reconnect') || errText.includes('invalid grant')) {
+      if (error?.status === 429) {
         this.errorMessage =
-          'Email service requires reconnecting Gmail in your EmailJS dashboard (OAuth token expired). Click below to send directly via Gmail Web, your email client, or WhatsApp!';
-      } else if (errStatus === 400 || errText.includes('service id not found')) {
-        this.errorMessage =
-          'Email service configuration error (Service ID not found in EmailJS). Click below to dispatch your message directly or connect on WhatsApp!';
+          error?.error?.message ||
+          'Too many messages sent recently. Please wait a few minutes before trying again.';
       } else {
         this.errorMessage =
-          'Something went wrong while sending your message. Click below to send directly via Gmail Web, email app, or WhatsApp!';
+          'Message dispatch service is temporarily unavailable. Click below to send directly via Gmail Web, email app, or WhatsApp!';
       }
     } finally {
       this.isSubmitting = false;

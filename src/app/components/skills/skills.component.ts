@@ -67,6 +67,7 @@ export class SkillsComponent {
       icon: 'fa-solid fa-shield-halved',
       skills: [
         { name: 'Auth0', icon: 'https://cdn.simpleicons.org/auth0/EB5424' },
+        { name: 'Supabase', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/supabase/supabase-original.svg' },
         { name: 'PostgreSQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postgresql/postgresql-original.svg' },
         { name: 'MySQL', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg' },
         { name: 'Firebase', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg' }
@@ -76,6 +77,7 @@ export class SkillsComponent {
       title: 'Cloud, Hosting & CI/CD',
       icon: 'fa-solid fa-cloud-arrow-up',
       skills: [
+        { name: 'Render', icon: 'https://cdn.simpleicons.org/render/46E3B7' },
         { name: 'GitHub Actions', icon: 'https://cdn.simpleicons.org/githubactions/2088FF' },
         { name: 'Vercel', icon: 'https://cdn.simpleicons.org/vercel/000000', invertInDarkMode: true },
         { name: 'Netlify', icon: 'https://cdn.simpleicons.org/netlify/00C7B7' },
