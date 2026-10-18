@@ -1,56 +1,48 @@
-<section id="skills" class="skills" data-aos="zoom-in">
-  <h1>Skills</h1>
-<div class="divider">
-  <!-- Database -->
-  <div class="skill-category">
-    <h3>Database</h3>
-    <div class="skills-row">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg" alt="MySQL" />
+<section class="section" id="skills">
+  <div class="section-header" data-aos="fade-up">
+    <div class="section-eyebrow">
+      <i class="fa-solid fa-code" aria-hidden="true"></i>
+      <span>Technical Arsenal</span>
+    </div>
+    <h2 class="section-title">Skills & Technologies</h2>
+    <p class="section-subtitle">
+      A comprehensive toolkit developed through enterprise software engineering, real-world system architecture, and Agentic AI workflows.
+    </p>
+  </div>
+
+  <div class="skills-bento-grid" data-aos="fade-up" data-aos-delay="100">
+    <div
+      *ngFor="let category of categories"
+      class="skill-category-card glass-card"
+      [class.featured-category]="category.featured">
+      <div class="category-header">
+        <div class="category-icon-wrapper" [class.ai-highlight]="category.featured">
+          <i [class]="category.icon" aria-hidden="true"></i>
+        </div>
+        <div class="category-info">
+          <div class="title-row">
+            <h3 class="category-heading">{{ category.title }}</h3>
+            <span *ngIf="category.featured" class="specialty-badge">Core Specialization</span>
+          </div>
+          <span class="skill-count">{{ category.skills.length }} Technologies</span>
+        </div>
+      </div>
+
+      <div class="skills-grid">
+        <div *ngFor="let skill of category.skills" class="skill-item" [attr.aria-label]="skill.name">
+          <div class="icon-bubble">
+            <img
+              [src]="skill.icon"
+              [alt]="skill.name"
+              [class.dark-invert]="skill.invertInDarkMode"
+              class="skill-icon"
+              width="40"
+              height="40"
+              loading="lazy" />
+          </div>
+          <span class="skill-name">{{ skill.name }}</span>
+        </div>
+      </div>
     </div>
   </div>
-  <!-- Tools & Libraries -->
-  <div class="skill-category">
-    <h3>Libraries</h3>
-    <div class="skills-row">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/numpy/numpy-original.svg" alt="NumPy" />
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/pandas/pandas-original.svg" alt="Pandas" />
-    </div>
-  </div>
-  <!-- Core Development -->
-  <div class="skill-category">
-    <h3>Core Development</h3>
-    <div class="skills-row">
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/java/java-original.svg" alt="Java" />
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg" alt="Python" />
-      <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/c/c-original.svg" alt="C" />
-    </div>
-  </div>
-</div>
-<!-- Tools -->
-<div class="skill-category">
-  <h3>Tools and IDE</h3>
-  <div class="skills-row">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg" alt="Git" />
-    <img class="github-logo" src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg" alt="GitHub"/>
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/firebase/firebase-original.svg" alt="Firebase" />
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/docker/docker-original.svg" alt="Docker"/>
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/postman/postman-original.svg" alt="Postman"/>
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/vscode/vscode-original.svg" alt="VS Code"/>  
-  </div>
-</div>
-<!-- Frontend -->
-<div class="skill-category">
-  <h3>Web Technologies</h3>
-  <div class="skills-row">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg" alt="HTML5">
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg" alt="CSS3" />
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg" alt="JS" />
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/typescript/typescript-original.svg"
-      alt="TypeScript" />
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/angularjs/angularjs-original.svg" alt="Angular" />
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg" alt="Spring Boot" />
-    <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/nodejs/nodejs-original.svg" alt="Node.js" />
-    <img class="github-logo"src="https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/express/express-original.svg" alt="Express.js" />
-  </div>
-</div>
 </section>

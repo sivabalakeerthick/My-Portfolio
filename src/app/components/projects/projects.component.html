@@ -1,22 +1,119 @@
-<section id="projects" class="projects" data-aos="zoom-in">
-  <h1 class="project-title">Projects</h1>
-
-  <div class="project-carousel">
-    <button class="arrow-button" (click)="prevProject()">&#x25C0;</button>
-
-    <div class="project-card">
-      <h2>{{ projects[currentIndex].title }}</h2>
-      <p>{{ projects[currentIndex].description }}</p>
-      <h2>Tech Stack:</h2>
-      <p>{{ projects[currentIndex].techStack }}</p>
-      <!-- <ul>
-        <li *ngFor="let task of projects[currentIndex].techStack">
-          {{ task }}
-        </li>
-      </ul> -->
-      <a [href]="projects[currentIndex].link" target="_blank">View</a>
+<section class="section" id="projects">
+  <div class="section-header" data-aos="fade-up">
+    <div class="section-eyebrow">
+      <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+      <span>Portfolio Showcase</span>
     </div>
+    <h2 class="section-title">Featured Projects</h2>
+    <p class="section-subtitle">
+      A collection of end-to-end full stack applications, machine learning systems, and data analytics dashboards.
+    </p>
 
-    <button class="arrow-button" (click)="nextProject()">&#x25B6;</button>
+    <!-- Filter Pills -->
+    <div class="filter-bar" role="tablist" aria-label="Project categories">
+      <button
+        class="filter-btn"
+        [class.active]="selectedFilter === 'all'"
+        (click)="setFilter('all')"
+        (keydown)="onFilterKeydown($event, 'all')"
+        id="project-filter-all"
+        role="tab"
+        [attr.aria-selected]="selectedFilter === 'all'"
+        aria-controls="project-results">
+        All Projects <span class="count">{{ projects.length }}</span>
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="selectedFilter === 'fullstack'"
+        (click)="setFilter('fullstack')"
+        (keydown)="onFilterKeydown($event, 'fullstack')"
+        id="project-filter-fullstack"
+        role="tab"
+        [attr.aria-selected]="selectedFilter === 'fullstack'"
+        aria-controls="project-results">
+        Full Stack
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="selectedFilter === 'ai'"
+        (click)="setFilter('ai')"
+        (keydown)="onFilterKeydown($event, 'ai')"
+        id="project-filter-ai"
+        role="tab"
+        [attr.aria-selected]="selectedFilter === 'ai'"
+        aria-controls="project-results">
+        AI & Data
+      </button>
+      <button
+        class="filter-btn"
+        [class.active]="selectedFilter === 'bi'"
+        (click)="setFilter('bi')"
+        (keydown)="onFilterKeydown($event, 'bi')"
+        id="project-filter-bi"
+        role="tab"
+        [attr.aria-selected]="selectedFilter === 'bi'"
+        aria-controls="project-results">
+        Analytics & BI
+      </button>
+    </div>
+  </div>
+
+  <!-- Projects Grid -->
+  <div id="project-results" class="projects-grid" role="tabpanel" [attr.aria-labelledby]="'project-filter-' + selectedFilter" data-aos="fade-up" data-aos-delay="100">
+    <article
+      *ngFor="let project of filteredProjects; let i = index"
+      class="project-card glass-card"
+      [class.featured-card]="project.featured"
+      [attr.aria-label]="project.title">
+      <div class="card-accent-bar"></div>
+
+      <div class="card-body">
+        <div class="card-top">
+          <span class="category-pill">{{ project.categoryLabel }}</span>
+          <span *ngIf="project.featured" class="featured-badge">
+            <i class="fa-solid fa-star" aria-hidden="true"></i> Featured
+          </span>
+        </div>
+
+        <h3 class="project-title">
+          <a [href]="project.link" target="_blank" rel="noopener noreferrer">
+            {{ project.title }}
+          </a>
+        </h3>
+
+        <p class="project-description">{{ project.description }}</p>
+
+        <div class="tech-stack">
+          <div class="tech-chips">
+            <span *ngFor="let tech of project.techStack" class="tech-chip">
+              {{ tech }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card-actions">
+        <a
+          *ngIf="project.githubUrl"
+          [href]="project.githubUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="project-btn source-btn"
+          [attr.aria-label]="'GitHub repository for ' + project.title">
+          <i class="fa-brands fa-github" aria-hidden="true"></i>
+          <span>Source Code</span>
+        </a>
+
+        <a
+          [href]="project.link"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="project-btn demo-btn"
+          [attr.aria-label]="'Live link for ' + project.title">
+          <span>View Project</span>
+          <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+        </a>
+      </div>
+    </article>
   </div>
 </section>

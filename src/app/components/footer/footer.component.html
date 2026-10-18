@@ -1,3 +1,101 @@
-<footer class="footer" data-aos="fade-up">
-  <p>© 2025 Siva Bala Keerthick G | <a href="https://github.com/sivabalakeerthick" target="_blank">GitHub</a> | <a href="https://linkedin.com/in/sivabalakeerthick" target="_blank">LinkedIn</a></p>
+<footer class="footer">
+  <div class="footer-container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a href="#hero" class="brand-logo" (click)="scrollToTop()">
+          <span class="logo-text">SBK</span>
+          <span class="logo-dot"></span>
+        </a>
+        <p class="brand-tagline">
+          Full Stack Software Engineer specializing in Angular & Spring Boot.
+        </p>
+      </div>
+
+      <div class="footer-nav">
+        <span class="nav-title">Navigation</span>
+        <div class="links-list">
+          <a href="#hero">Home</a>
+          <a href="#experience">Experience</a>
+          <a href="#freelancing">Freelance</a>
+          <a href="#skills">Skills</a>
+          <a href="#projects">Projects</a>
+          <a href="#education">Education</a>
+          <a href="#contact">Contact</a>
+        </div>
+      </div>
+
+      <div class="footer-connect">
+        <span class="nav-title">Connect</span>
+        <div class="social-icons">
+          <a
+            href="https://github.com/sivabalakeerthick"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-btn github-btn"
+            aria-label="GitHub Profile"
+            title="GitHub (@sivabalakeerthick)">
+            <i class="fa-brands fa-github" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://linkedin.com/in/sivabalakeerthick"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-btn linkedin-btn"
+            aria-label="LinkedIn Profile"
+            title="LinkedIn (/in/sivabalakeerthick)">
+            <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://instagram.com/sivabalakeerthick"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-btn instagram-btn"
+            aria-label="Instagram Profile"
+            title="Instagram (@sivabalakeerthick)">
+            <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://www.chess.com/member/sivabalakerthick"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-btn chess-btn"
+            aria-label="Chess.com Profile"
+            title="Chess.com (@sivabalakerthick)">
+            <i class="fa-solid fa-chess-knight" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://wa.me/sivabalakeerthick"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-btn whatsapp-btn"
+            aria-label="WhatsApp Direct Message"
+            title="WhatsApp">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+          </a>
+          <a
+            href="mailto:sivabalakeerthick@gmail.com"
+            class="social-btn email-btn"
+            aria-label="Send direct email"
+            title="Email (sivabalakeerthick@gmail.com)">
+            <i class="fa-solid fa-envelope" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p class="copyright">
+        &copy; {{ currentYear }} Siva Bala Keerthick G. Engineered with Angular 22 & SCSS.
+      </p>
+
+      <button
+        class="back-to-top-btn"
+        (click)="scrollToTop()"
+        aria-label="Back to top"
+        title="Scroll to Top">
+        <span>Back to Top</span>
+        <i class="fa-solid fa-arrow-up" aria-hidden="true"></i>
+      </button>
+    </div>
+  </div>
 </footer>

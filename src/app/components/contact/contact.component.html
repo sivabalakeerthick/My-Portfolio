@@ -1,28 +1,307 @@
-<section id="contact" class="contact-section" data-aos="zoom-in">
-  <h1 class="section-title">Contact Me</h1>
+<section class="section" id="contact">
+  <div class="contact-container" data-aos="fade-up">
+    <!-- Left Column: Direct Info, WhatsApp, Copy Email, & Timezone -->
+    <div class="contact-info">
+      <div class="section-eyebrow">
+        <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+        <span>Initiate Contact</span>
+      </div>
 
-  <form [formGroup]="contactForm" (ngSubmit)="onSubmit()" novalidate class="contact-form">
-    <textarea rows="1" type="text" placeholder="Your Name" formControlName="name"></textarea>
-    <div *ngIf="submitted && f['name'].errors" class="error-msg">
-      <small *ngIf="f['name'].errors?.['required']">Name is required.</small>
-      <small *ngIf="f['name'].errors?.['minlength']">Min 3 characters.</small>
+      <h2 class="contact-heading">
+        Let's discuss engineering & <span class="gradient-text">opportunities</span>.
+      </h2>
+
+      <p class="contact-intro">
+        Whether you're looking for a dedicated Full Stack Engineer, need consultation on Agentic RAG architecture, or want to commission freelance client systems — let's connect.
+      </p>
+
+      <!-- 1-Click Copy Email Card -->
+      <div class="email-copy-card glass-card">
+        <div class="email-details">
+          <span class="email-label">Direct Email</span>
+          <span class="email-value">{{ emailAddress }}</span>
+        </div>
+        <button
+          class="copy-email-btn"
+          (click)="copyEmail()"
+          [attr.aria-label]="copiedEmail ? 'Email copied' : 'Copy email to clipboard'"
+          [title]="copiedEmail ? 'Copied to clipboard!' : 'Copy Email'">
+          <i class="fa-solid" [ngClass]="copiedEmail ? 'fa-check' : 'fa-copy'" aria-hidden="true"></i>
+          <span>{{ copiedEmail ? 'Copied!' : 'Copy' }}</span>
+        </button>
+      </div>
+
+      <!-- Live Location & Preferences Widget -->
+      <div class="location-widget glass-card">
+        <!-- Current Location & Local Time -->
+        <div class="widget-row">
+          <div class="widget-item">
+            <i class="fa-solid fa-location-dot accent-icon" aria-hidden="true"></i>
+            <div>
+              <span class="widget-label">Current Location</span>
+              <span class="widget-value">Bengaluru, India</span>
+            </div>
+          </div>
+          <div class="widget-item">
+            <i class="fa-regular fa-clock accent-icon" aria-hidden="true"></i>
+            <div>
+              <span class="widget-label">Local Time (IST)</span>
+              <span class="widget-value">{{ localTime }}</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="widget-divider"></div>
+
+        <!-- Section 1: Work Locations Heading -->
+        <div class="preference-group">
+          <div class="preference-header">
+            <i class="fa-solid fa-map-location-dot accent-icon" aria-hidden="true"></i>
+            <span class="widget-label">Work Locations</span>
+          </div>
+          <div class="work-preference-chips">
+            <span class="work-chip city-chip">
+              <i class="fa-solid fa-building" aria-hidden="true"></i>
+              <span>Chennai</span>
+            </span>
+            <span class="work-chip city-chip">
+              <i class="fa-solid fa-building" aria-hidden="true"></i>
+              <span>Bengaluru</span>
+            </span>
+            <span class="work-chip city-chip">
+              <i class="fa-solid fa-building" aria-hidden="true"></i>
+              <span>Hyderabad</span>
+            </span>
+          </div>
+        </div>
+
+        <div class="widget-divider subtle"></div>
+
+        <!-- Section 2: Work Modes Heading -->
+        <div class="preference-group">
+          <div class="preference-header">
+            <i class="fa-solid fa-laptop-code accent-icon" aria-hidden="true"></i>
+            <span class="widget-label">Work Modes</span>
+          </div>
+          <div class="work-preference-chips">
+            <span class="work-chip mode-chip">
+              <i class="fa-solid fa-house-laptop" aria-hidden="true"></i>
+              <span>Remote</span>
+            </span>
+            <span class="work-chip mode-chip">
+              <i class="fa-solid fa-people-arrows" aria-hidden="true"></i>
+              <span>Hybrid</span>
+            </span>
+            <span class="work-chip mode-chip">
+              <i class="fa-solid fa-briefcase" aria-hidden="true"></i>
+              <span>Onsite</span>
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quick Social Pills (Including WhatsApp Pill) -->
+      <div class="social-links-row">
+        <a
+          [href]="whatsappLink"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="social-pill whatsapp-pill"
+          aria-label="Direct WhatsApp Message"
+          title="WhatsApp (@sivabalakeerthick)">
+          <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+          <span>WhatsApp</span>
+        </a>
+        <a
+          href="https://linkedin.com/in/sivabalakeerthick"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="social-pill linkedin-pill"
+          aria-label="Connect on LinkedIn"
+          title="LinkedIn: /in/sivabalakeerthick">
+          <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
+          <span>LinkedIn</span>
+        </a>
+        <a
+          href="https://github.com/sivabalakeerthick"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="social-pill github-pill"
+          aria-label="View GitHub Profile"
+          title="GitHub: @sivabalakeerthick">
+          <i class="fa-brands fa-github" aria-hidden="true"></i>
+          <span>GitHub</span>
+        </a>
+        <a
+          [href]="instagramUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="social-pill instagram-pill"
+          aria-label="Follow on Instagram"
+          title="Instagram: @sivabalakeerthick">
+          <i class="fa-brands fa-instagram" aria-hidden="true"></i>
+          <span>Instagram</span>
+        </a>
+        <a
+          [href]="chessComUrl"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="social-pill chess-pill"
+          aria-label="Connect on Chess.com"
+          title="Chess.com: @sivabalakerthick">
+          <i class="fa-solid fa-chess-knight" aria-hidden="true"></i>
+          <span>Chess.com</span>
+        </a>
+      </div>
     </div>
 
-    <textarea rows="1" type="email" placeholder="Your Email" formControlName="email"></textarea>
-    <div *ngIf="submitted && f['email'].errors" class="error-msg">
-      <small *ngIf="f['email'].errors?.['required']">Email is required.</small>
-      <small *ngIf="f['email'].errors?.['email']">Invalid email.</small>
+    <!-- Right Column: Glassmorphism Message Form with High Importance Option -->
+    <div class="contact-form-wrapper">
+      <form
+        [formGroup]="contactForm"
+        (ngSubmit)="onSubmit()"
+        novalidate
+        class="contact-form glass-card">
+        <div class="form-header">
+          <h3 class="form-title">Send a Direct Message</h3>
+          <!-- <p class="form-subtitle">Messages are dispatched instantly to my primary inbox.</p> -->
+        </div>
+
+        <div class="form-group">
+          <label for="contact-name">Your Name</label>
+          <input
+            id="contact-name"
+            type="text"
+            placeholder="John Doe"
+            formControlName="name"
+            autocomplete="name"
+            [class.is-invalid]="submitted && f['name'].errors" />
+          <div *ngIf="submitted && f['name'].errors" class="field-error">
+            <small *ngIf="f['name'].errors['required']">Name is required.</small>
+            <small *ngIf="f['name'].errors['minlength']">Name must be at least 3 characters.</small>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="contact-email">Your Email</label>
+          <input
+            id="contact-email"
+            type="email"
+            placeholder="john@example.com"
+            formControlName="email"
+            autocomplete="email"
+            [class.is-invalid]="(submitted || f['email'].touched) && f['email'].errors" />
+          <div *ngIf="(submitted || f['email'].touched) && f['email'].errors" class="field-error">
+            <small *ngIf="f['email'].errors['required']">Email is required.</small>
+            <small *ngIf="f['email'].errors['email'] && !f['email'].errors['ownerEmailNotAllowed']">Please enter a valid email address.</small>
+            <small *ngIf="f['email'].errors['ownerEmailNotAllowed']">
+              This is my email address! Please enter your own email so I can respond to you.
+            </small>
+          </div>
+        </div>
+
+        <!-- Priority / Importance Selector -->
+        <div class="form-group">
+          <label class="importance-label">
+            <span>Inquiry Priority</span>
+            <span *ngIf="contactForm.value.importance === 'high'" class="urgent-tag">
+              <i class="fa-solid fa-bell"></i> Urgent Priority
+            </span>
+          </label>
+
+          <div class="importance-selector" role="radiogroup" aria-label="Inquiry Priority">
+            <button
+              type="button"
+              class="priority-btn"
+              [class.active]="contactForm.value.importance === 'normal'"
+              (click)="setImportance('normal')"
+              role="radio"
+              [attr.aria-checked]="contactForm.value.importance === 'normal'">
+              <i class="fa-regular fa-envelope" aria-hidden="true"></i>
+              <span>Standard</span>
+            </button>
+
+            <button
+              type="button"
+              class="priority-btn high-priority"
+              [class.active]="contactForm.value.importance === 'high'"
+              (click)="setImportance('high')"
+              role="radio"
+              [attr.aria-checked]="contactForm.value.importance === 'high'">
+              <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
+              <span>High Importance</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label for="contact-message">Your Message</label>
+          <textarea
+            id="contact-message"
+            rows="4"
+            placeholder="Hi Siva, I would like to discuss..."
+            formControlName="message"
+            [class.is-invalid]="submitted && f['message'].errors"></textarea>
+          <div *ngIf="submitted && f['message'].errors" class="field-error">
+            <small *ngIf="f['message'].errors['required']">Message is required.</small>
+            <small *ngIf="f['message'].errors['minlength']">Message must be at least 10 characters.</small>
+          </div>
+        </div>
+
+        <div class="honeypot-field" aria-hidden="true">
+          <label for="contact-website">Website</label>
+          <input id="contact-website" type="text" formControlName="website" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-primary submit-btn"
+          [disabled]="isSubmitting">
+          <span *ngIf="!isSubmitting">
+            <span>{{ contactForm.value.importance === 'high' ? 'Dispatch High Priority Message' : 'Send Message' }}</span>
+            <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+          </span>
+          <span *ngIf="isSubmitting" class="submitting-state">
+            <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i>
+            <span>Transmitting...</span>
+          </span>
+        </button>
+
+        <div *ngIf="successMessage" class="alert-success" role="alert">
+          <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+          <span>{{ successMessage }}</span>
+        </div>
+
+        <div *ngIf="errorMessage" class="alert-error" role="alert">
+          <div class="alert-error-header">
+            <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+            <span>{{ errorMessage }}</span>
+          </div>
+          <div *ngIf="mailtoFallbackUrl" class="fallback-action">
+            <a
+              *ngIf="gmailWebUrl"
+              [href]="gmailWebUrl"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-primary fallback-btn gmail-btn">
+              <i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i>
+              <span>Open & Send via Gmail Web</span>
+            </a>
+            <a [href]="mailtoFallbackUrl" class="btn btn-secondary fallback-btn email-app-btn">
+              <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
+              <span>Send via Default Email App</span>
+            </a>
+            <a
+              [href]="whatsappLink"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn btn-secondary whatsapp-fallback-btn">
+              <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+              <span>Message on WhatsApp</span>
+            </a>
+          </div>
+        </div>
+      </form>
     </div>
-
-    <textarea rows="6" placeholder="Your Message" formControlName="message"></textarea>
-    <div *ngIf="submitted && f['message'].errors" class="error-msg">
-      <small *ngIf="f['message'].errors?.['required']">Message is required.</small>
-      <small *ngIf="f['message'].errors?.['minlength']">Min 10 characters.</small>
-    </div>
-
-    <button type="submit">Send Message</button>
-
-    <div *ngIf="successMessage" class="success-msg">{{ successMessage }}</div>
-    <div *ngIf="errorMessage" class="error-msg">{{ errorMessage }}</div>
-  </form>
+  </div>
 </section>

@@ -1,16 +1,33 @@
-<app-navbar></app-navbar>
-<app-hero id="hero"></app-hero>
-<app-experience id="experience"></app-experience>
-<app-skills id="skills"></app-skills>
-<app-projects id="projects"></app-projects>
-<app-education id="education"></app-education>
-<app-contact id="contact"></app-contact>
-<button
-  id="scroll-to-top"
-  class="scroll-to-top"
-  *ngIf="showScrollButton"
-  (click)="scrollToTop()"
-  title="Back to Top">
-  &#8593;
-</button>
-<app-footer></app-footer>
+<canvas #ambientCanvas id="ambient-canvas" aria-hidden="true"></canvas>
+
+<!-- Secret Admin Portal Route (Accessible only via #admin) -->
+<ng-container *ngIf="isAdminRoute">
+  <app-admin (closeAdmin)="exitAdmin()"></app-admin>
+</ng-container>
+
+<!-- Public Portfolio Layout (Default for all visitors) -->
+<ng-container *ngIf="!isAdminRoute">
+  <app-navbar></app-navbar>
+
+  <main>
+    <app-hero id="hero"></app-hero>
+    <app-experience id="experience"></app-experience>
+    <app-freelancing id="freelancing"></app-freelancing>
+    <app-skills id="skills"></app-skills>
+    <app-projects id="projects"></app-projects>
+    <app-education id="education"></app-education>
+    <app-contact id="contact"></app-contact>
+  </main>
+
+  <button
+    id="scroll-to-top"
+    class="scroll-to-top"
+    *ngIf="showScrollButton"
+    (click)="scrollToTop()"
+    aria-label="Back to top"
+    title="Back to Top">
+    &#8593;
+  </button>
+
+  <app-footer></app-footer>
+</ng-container>

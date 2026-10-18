@@ -1,0 +1,250 @@
+<section class="admin-wrapper">
+  <!-- Unauthenticated: Password Verification Gate -->
+  <div *ngIf="!isAuthenticated" class="auth-card glass-card" data-aos="zoom-in">
+    <div class="auth-icon-wrap">
+      <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+    </div>
+
+    <h2 class="auth-title">Portfolio Control Center</h2>
+    <p class="auth-subtitle">
+      This management area is restricted. Enter the administrator password to manage your live resume.
+    </p>
+
+    <form (ngSubmit)="onLogin()" class="auth-form">
+      <div class="input-wrap">
+        <i class="fa-solid fa-key input-icon" aria-hidden="true"></i>
+        <input
+          [type]="showPassword ? 'text' : 'password'"
+          [(ngModel)]="passwordInput"
+          name="adminPassword"
+          placeholder="Enter Admin Password..."
+          autocomplete="current-password"
+          required
+          autofocus />
+        <button
+          type="button"
+          class="eye-toggle-btn"
+          (click)="togglePasswordVisibility()"
+          [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+          <i class="fa-solid" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
+        </button>
+      </div>
+
+      <div *ngIf="loginError" class="auth-error">
+        <i class="fa-solid fa-circle-exclamation"></i>
+        <span>{{ loginError }}</span>
+      </div>
+
+      <div class="auth-actions">
+        <button type="submit" class="btn btn-primary submit-auth-btn" [disabled]="isLoggingIn">
+          <i class="fa-solid fa-circle-notch fa-spin" *ngIf="isLoggingIn"></i>
+          <span>{{ isLoggingIn ? 'Verifying...' : 'Unlock Admin Panel' }}</span>
+          <i class="fa-solid fa-arrow-right" *ngIf="!isLoggingIn"></i>
+        </button>
+
+        <button type="button" class="btn btn-secondary cancel-btn" (click)="onReturnToPortfolio()">
+          <i class="fa-solid fa-arrow-left"></i>
+          <span>Return to Portfolio</span>
+        </button>
+      </div>
+    </form>
+  </div>
+
+  <!-- Authenticated: Resume Control Dashboard -->
+  <div *ngIf="isAuthenticated" class="admin-dashboard">
+    <!-- Top Bar -->
+    <header class="dashboard-header glass-card">
+      <div class="header-left">
+        <div class="header-icon">
+          <i class="fa-solid fa-file-shield" aria-hidden="true"></i>
+        </div>
+        <div>
+          <h1 class="header-title">Resume Management System</h1>
+          <p class="header-sub">Upload, delete, and control the active resume served to all portfolio visitors.</p>
+        </div>
+      </div>
+
+      <div class="header-right">
+        <button class="btn btn-secondary action-btn" (click)="onReturnToPortfolio()">
+          <i class="fa-solid fa-globe"></i>
+          <span>View Site</span>
+        </button>
+        <button class="btn btn-secondary lock-btn" (click)="onLogout()">
+          <i class="fa-solid fa-lock"></i>
+          <span>Lock</span>
+        </button>
+      </div>
+    </header>
+
+    <!-- Feedback Alerts -->
+    <div *ngIf="statusMessage" class="alert alert-success" role="alert">
+      <i class="fa-solid fa-circle-check"></i>
+      <span>{{ statusMessage }}</span>
+      <button class="alert-close" (click)="statusMessage = ''">&times;</button>
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-error" role="alert">
+      <i class="fa-solid fa-triangle-exclamation"></i>
+      <span>{{ errorMessage }}</span>
+      <button class="alert-close" (click)="errorMessage = ''">&times;</button>
+    </div>
+
+    <!-- Main Grid -->
+    <div class="dashboard-grid">
+      <!-- Card 1: Active Resume Status -->
+      <article class="dash-card status-card glass-card">
+        <div class="card-title-row">
+          <h3 class="card-heading">
+            <i class="fa-solid fa-file-lines accent-icon"></i>
+            <span>Current Active Resume</span>
+          </h3>
+          <span
+            class="status-pill"
+            [class.active]="!resumeState?.isDeleted"
+            [class.deleted]="resumeState?.isDeleted">
+            <span class="status-dot"></span>
+            {{ resumeState?.isDeleted ? 'Deleted / Hidden' : 'Active & Published' }}
+          </span>
+        </div>
+
+        <div class="status-details">
+          <div class="detail-row">
+            <span class="detail-label">File Name:</span>
+            <span class="detail-val file-val">{{ resumeState?.fileName }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">File Size:</span>
+            <span class="detail-val">{{ resumeState?.fileSize || 'Standard' }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Last Updated:</span>
+            <span class="detail-val">{{ resumeState?.uploadDate }}</span>
+          </div>
+          <div class="detail-row">
+            <span class="detail-label">Storage Type:</span>
+            <span class="detail-val">{{ getStorageType() }}</span>
+          </div>
+        </div>
+
+        <div class="status-actions">
+          <button
+            class="btn btn-primary"
+            (click)="downloadCurrent()"
+            [disabled]="resumeState?.isDeleted">
+            <i class="fa-solid fa-download"></i>
+            <span>Test Download / Preview</span>
+          </button>
+
+          <button
+            class="btn btn-danger delete-btn"
+            (click)="onDeleteResume()"
+            [disabled]="resumeState?.isDeleted">
+            <i class="fa-solid fa-trash-can"></i>
+            <span>Delete Resume</span>
+          </button>
+        </div>
+      </article>
+
+      <!-- Card 2: Upload New Resume -->
+      <article class="dash-card upload-card glass-card">
+        <h3 class="card-heading">
+          <i class="fa-solid fa-cloud-arrow-up accent-icon"></i>
+          <span>Upload Updated Resume</span>
+        </h3>
+        <p class="card-description">
+          Upload a new PDF to immediately update the download file for all visitors.
+        </p>
+
+        <!-- Dropzone -->
+        <div
+          class="dropzone"
+          [class.dragging]="isDragging"
+          (dragover)="onDragOver($event)"
+          (dragleave)="onDragLeave($event)"
+          (drop)="onDrop($event)">
+          <input
+            #fileInput
+            type="file"
+            accept=".pdf,application/pdf"
+            (change)="onFileChange($event)"
+            class="file-input-hidden" />
+
+          <div class="dropzone-inner" (click)="fileInput.click()">
+            <div class="upload-icon-bubble">
+              <i class="fa-solid fa-file-pdf"></i>
+            </div>
+            <p class="dropzone-text">
+              <strong>Click to browse</strong> or drag & drop your updated PDF here
+            </p>
+            <span class="dropzone-hint">Supported format: PDF (.pdf) • Up to 10 MB</span>
+          </div>
+        </div>
+
+        <!-- Selected File Preview -->
+        <div *ngIf="selectedFile" class="selected-file-bar">
+          <div class="file-info">
+            <i class="fa-solid fa-file-circle-check text-primary"></i>
+            <span class="file-name">{{ selectedFile.name }}</span>
+            <span class="file-size">({{ (selectedFile.size / 1024).toFixed(1) }} KB)</span>
+          </div>
+          <button class="btn btn-primary publish-btn" (click)="onUploadResume()" [disabled]="isUploading">
+            <i class="fa-solid fa-circle-notch fa-spin" *ngIf="isUploading"></i>
+            <i class="fa-solid fa-cloud-arrow-up" *ngIf="!isUploading"></i>
+            <span>{{ isUploading ? 'Uploading...' : 'Publish & Replace Resume' }}</span>
+          </button>
+        </div>
+      </article>
+
+      <!-- Card 3: Cloud Resume Link Option -->
+      <article class="dash-card cloud-card glass-card">
+        <h3 class="card-heading">
+          <i class="fa-solid fa-link accent-icon"></i>
+          <span>Option B: Direct Cloud / Google Drive Link</span>
+        </h3>
+        <p class="card-description">
+          Alternatively, link directly to a publicly hosted PDF (e.g. Google Drive, Dropbox, or OneDrive link).
+        </p>
+
+        <div class="cloud-input-group">
+          <input
+            type="url"
+            [(ngModel)]="cloudUrlInput"
+            placeholder="https://drive.google.com/... or https://..."
+            class="cloud-url-input" />
+          <button class="btn btn-secondary apply-cloud-btn" (click)="onSaveCloudUrl()">
+            <i class="fa-solid fa-check"></i>
+            <span>Set Cloud URL</span>
+          </button>
+        </div>
+      </article>
+
+      <!-- Card 4: Reset & Deployment Info -->
+      <article class="dash-card reset-card glass-card">
+        <h3 class="card-heading">
+          <i class="fa-solid fa-rotate-left accent-icon"></i>
+          <span>Restore Default Supabase Résumé</span>
+        </h3>
+        <p class="card-description">
+          Reset back to the default Supabase Cloud storage link or overwrite your file in Supabase.
+        </p>
+
+        <div class="restore-actions">
+          <button class="btn btn-secondary restore-btn" (click)="onRestoreDefault()">
+            <i class="fa-solid fa-arrow-rotate-left"></i>
+            <span>Restore Default Supabase Resume</span>
+          </button>
+        </div>
+
+        <div class="info-tip-box">
+          <i class="fa-solid fa-lightbulb text-accent"></i>
+          <div>
+            <strong>Instant Supabase Cloud Updates:</strong>
+            <p>
+              To update your resume anytime without writing code or redeploying, open your <strong>Supabase Dashboard &rarr; Storage &rarr; resume</strong> bucket, upload your new PDF, and check <em>"Overwrite existing file"</em>.
+            </p>
+          </div>
+        </div>
+      </article>
+    </div>
+  </div>
+</section>

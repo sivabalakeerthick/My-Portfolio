@@ -1,17 +1,125 @@
-<section class="hero" data-aos="fade-in">
-  <div class="hero-content">
-    <img src="assets/123.jpg" alt="Siva Bala Keerthick G" class="profile-image" />
-    <h1 class="hero-title">Siva Bala Keerthick G</h1>
-    <p class="hero-role">Full Stack Developer</p>
-    <p class="hero-bio">
-      <em>
-        Passionate full-stack developer skilled in <strong>Angular</strong> and <strong>Spring Boot</strong>.<br />
-        I build seamless user experiences backed by scalable backend services.
-      </em>
-    </p>
-    <div class="hero-buttons">
-      <a href="/assets/Resume.pdf" download class="resume-btn">Download Résumé</a>
-      <a href="/assets/Resume.pdf" class="resume-btn" target="_blank">View Résumé</a>
+<section class="hero-section" id="hero">
+  <div class="hero-container">
+    <!-- Left Column: Introduction & CTAs -->
+    <div class="hero-intro" data-aos="fade-up" data-aos-duration="600">
+      <div class="hero-eyebrow">
+        <span class="sparkle">✦</span>
+        <span>SOFTWARE ENGINEER • FULL STACK</span>
+      </div>
+
+      <h1 class="hero-title">
+        Building scalable digital experiences with <span class="gradient-text">precision</span>.
+      </h1>
+
+      <div class="typewriter-container" aria-live="polite">
+        <span class="typewriter-prefix">Specialized as a </span>
+        <span class="typewriter-text">{{ displayedRole }}</span>
+        <span class="typewriter-cursor" aria-hidden="true"></span>
+      </div>
+
+      <p class="hero-description">
+        Crafting modern, accessible web applications with <strong>Angular</strong> and resilient backend microservices with <strong>Spring Boot</strong>. Experienced at <strong>Cognizant</strong> delivering production-grade enterprise software.
+      </p>
+
+      <div class="hero-actions">
+        <a href="#projects" class="btn btn-primary">
+          <span>Explore Projects</span>
+          <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+        </a>
+        <a href="#contact" class="btn btn-secondary">
+          <span>Get In Touch</span>
+        </a>
+        <a
+          [href]="resumeService.getDownloadUrl()"
+          [download]="resumeService.getFileName()"
+          (click)="onDownloadResume($event)"
+          class="btn btn-secondary resume-btn"
+          [class.disabled-btn]="!resumeService.isAvailable()"
+          [attr.title]="resumeService.isAvailable() ? 'Download Résumé' : 'Resume currently updating'">
+          <i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i>
+          <span>Résumé</span>
+        </a>
+      </div>
+
+      <!-- Quick Metrics -->
+      <div class="hero-metrics">
+        <div class="metric-item">
+          <span class="metric-number">1+</span>
+          <span class="metric-label">Years at Cognizant</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric-item">
+          <span class="metric-number">Angular 22</span>
+          <span class="metric-label">Modern Framework</span>
+        </div>
+        <div class="metric-divider"></div>
+        <div class="metric-item">
+          <span class="metric-number">Full Stack</span>
+          <span class="metric-label">End-to-End Delivery</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Right Column: Interactive 3D Developer Card -->
+    <div class="hero-visual" data-aos="fade-up" data-aos-duration="800" data-aos-delay="150">
+      <div
+        #codeCard
+        class="code-terminal-card glass-card"
+        (mousemove)="onCardMouseMove($event)"
+        (mouseleave)="onCardMouseLeave()">
+        <div class="terminal-header">
+          <div class="window-controls">
+            <span class="dot close"></span>
+            <span class="dot minimize"></span>
+            <span class="dot maximize"></span>
+          </div>
+          <div class="terminal-title">
+            <i class="fa-solid fa-code terminal-icon"></i>
+            <span>developer.config.ts</span>
+          </div>
+          <button
+            class="copy-btn"
+            (click)="copyCode()"
+            [attr.aria-label]="copiedCode ? 'Code copied' : 'Copy code snippet'"
+            [title]="copiedCode ? 'Copied!' : 'Copy Code'">
+            <i class="fa-solid" [ngClass]="copiedCode ? 'fa-check' : 'fa-copy'"></i>
+            <span class="copy-text">{{ copiedCode ? 'Copied!' : 'Copy' }}</span>
+          </button>
+        </div>
+
+        <div class="terminal-body">
+          <div class="line-numbers" aria-hidden="true">
+            <span>01</span>
+            <span>02</span>
+            <span>03</span>
+            <span>04</span>
+            <span>05</span>
+            <span>06</span>
+            <span>07</span>
+            <span>08</span>
+            <span>09</span>
+            <span>10</span>
+          </div>
+          <pre class="code-content"><code><span class="kw">const</span> <span class="var">engineer</span>: <span class="type">FullStackDev</span> = &#123;
+  <span class="prop">name</span>: <span class="str">'Siva Bala Keerthick G'</span>,
+  <span class="prop">company</span>: <span class="str">'Cognizant'</span>,
+  <span class="prop">role</span>: <span class="str">'Programmer Analyst'</span>,
+  <span class="prop">currentLocation</span>: <span class="str">'Bengaluru, India'</span>,
+  <span class="prop">frontend</span>: [<span class="str">'Angular'</span>, <span class="str">'TypeScript'</span>, <span class="str">'Axis'</span>],
+  <span class="prop">backend</span>: [<span class="str">'Spring Boot'</span>, <span class="str">'Java'</span>, <span class="str">'MySQL'</span>],
+  <span class="prop">tools</span>: [<span class="str">'Git'</span>, <span class="str">'Docker'</span>, <span class="str">'Firebase'</span>],
+  <span class="prop">openToWork</span>: <span class="bool">true</span>
+&#125;;</code></pre>
+        </div>
+
+        <div class="terminal-footer">
+          <div class="status-indicator">
+            <span class="live-dot"></span>
+            <span>TypeScript 6.0.3 • Angular 22</span>
+          </div>
+          <span class="location-tag">📍 Bengaluru, India</span>
+        </div>
+      </div>
     </div>
   </div>
 </section>

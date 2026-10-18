@@ -1,32 +1,62 @@
-import { Component, HostListener } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-navbar',
+  standalone: true,
+  imports: [CommonModule],
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.css']
+  styleUrl: './navbar.component.scss'
 })
-export class NavbarComponent {
+export class NavbarComponent implements OnInit {
   isDarkMode = true;
   activeSection = 'hero';
+  isMobileMenuOpen = false;
 
-  @HostListener('window:scroll', [])
-  onWindowScroll() {
-    const sections = ['hero', 'about', 'education', 'projects', 'skills', 'experience', 'contact'];
+  private readonly sections = ['hero', 'experience', 'freelancing', 'skills', 'projects', 'education', 'contact'];
 
-    for (let sec of sections) {
-      const el = document.getElementById(sec);
-      if (el) {
-        const rect = el.getBoundingClientRect();
-        if (rect.top <= 150 && rect.bottom >= 150) {
-          this.activeSection = sec;
-          break;
-        }
-      }
+  ngOnInit(): void {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme) {
+      this.isDarkMode = savedTheme === 'dark';
+    } else if (typeof window !== 'undefined' && window.matchMedia) {
+      this.isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
+    this.applyTheme();
   }
 
-  toggleTheme() {
+  @HostListener('window:scroll', [])
+  onWindowScroll(): void {
+    const scrollPosition = window.scrollY + 200;
+
+    for (let i = this.sections.length - 1; i >= 0; i--) {
+      const sectionId = this.sections[i];
+      const el = document.getElementById(sectionId);
+      if (el && el.offsetTop <= scrollPosition) {
+        this.activeSection = sectionId;
+        return;
+      }
+    }
+    this.activeSection = 'hero';
+  }
+
+  toggleTheme(): void {
     this.isDarkMode = !this.isDarkMode;
-    document.body.classList.toggle('dark-mode', this.isDarkMode);
+    localStorage.setItem('theme', this.isDarkMode ? 'dark' : 'light');
+    this.applyTheme();
+  }
+
+  toggleMobileMenu(): void {
+    this.isMobileMenuOpen = !this.isMobileMenuOpen;
+  }
+
+  closeMobileMenu(): void {
+    this.isMobileMenuOpen = false;
+  }
+
+  private applyTheme(): void {
+    if (typeof document !== 'undefined') {
+      document.body.classList.toggle('dark-mode', this.isDarkMode);
+    }
   }
 }

@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" fill="none">
+  <rect width="100" height="100" rx="20" fill="#0b172a"/>
+  <!-- Endpoint brackets and REST communication -->
+  <path d="M28 32 L18 50 L28 68" stroke="#00e5ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M72 32 L82 50 L72 68" stroke="#00e5ff" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+  <rect x="34" y="38" width="32" height="24" rx="6" fill="#818cf8" fill-opacity="0.2" stroke="#818cf8" stroke-width="2.5"/>
+  <text x="50" y="54" font-family="sans-serif" font-size="10" font-weight="900" fill="#ffffff" text-anchor="middle">REST</text>
+</svg>

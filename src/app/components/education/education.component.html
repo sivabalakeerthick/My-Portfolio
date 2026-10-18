@@ -1,20 +1,32 @@
-<section id="education" class="education-section" data-aos="zoom-in">
-  <h1 class="section-heading">Education</h1>
-  <div class="card-grid">
-    <div class="education-card">
-      <h3>BE – Computer Science Engineering</h3>
-      <p>RMK Engineering College, 2021–2025</p>
-
+<section class="section" id="education">
+  <div class="section-header" data-aos="fade-up">
+    <div class="section-eyebrow">
+      <i class="fa-solid fa-graduation-cap" aria-hidden="true"></i>
+      <span>Academic Foundation</span>
     </div>
-    <div class="education-card">
-      <h3>HSC – 12th Standard</h3>
-      <p>Cambridge Matriculation Hr. Sec. School, 2021</p>
+    <h2 class="section-title">Education</h2>
+    <p class="section-subtitle">
+      Academic milestones that shaped my analytical thinking and software engineering foundations.
+    </p>
+  </div>
 
-    </div>
-    <div class="education-card">
-      <h3>SSLC – 10th Standard</h3>
-      <p>Cambridge Matriculation Hr. Sec. School, 2019</p>
-
-    </div>
+  <div class="education-grid" data-aos="fade-up" data-aos-delay="100">
+    <article *ngFor="let item of educationList" class="education-card glass-card">
+      <div class="edu-icon-badge">
+        <i [class]="item.icon || 'fa-solid fa-graduation-cap'" aria-hidden="true"></i>
+      </div>
+      <div class="edu-body">
+        <div class="edu-top">
+          <h3 class="degree-title">{{ item.degree }}</h3>
+          <span class="education-year">{{ item.year }}</span>
+        </div>
+        <p class="institution-name">{{ item.institution }}</p>
+        <div *ngIf="item.location" class="location-row">
+          <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+          <span>{{ item.location }}</span>
+        </div>
+        <p *ngIf="item.details" class="edu-details">{{ item.details }}</p>
+      </div>
+    </article>
   </div>
 </section>

@@ -1,0 +1,193 @@
+.filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  margin-top: 1.5rem;
+
+  .filter-btn {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-subtle);
+    color: var(--text-muted);
+    font-size: 0.84rem;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 9999px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+
+    &:hover {
+      color: var(--text-main);
+      border-color: rgba(var(--primary-rgb), 0.4);
+      transform: translateY(-2px);
+    }
+
+    &.active {
+      background: rgba(var(--primary-rgb), 0.12);
+      border-color: var(--primary);
+      color: var(--primary);
+      box-shadow: 0 4px 16px -2px rgba(var(--primary-rgb), 0.3);
+    }
+
+    .count {
+      font-size: 0.72rem;
+      padding: 1px 6px;
+      border-radius: 9999px;
+      background: rgba(var(--primary-rgb), 0.2);
+      color: var(--primary);
+    }
+  }
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: clamp(1.25rem, 3vw, 2rem);
+  width: 100%;
+  max-width: 1100px;
+  margin: 0 auto;
+
+  @media (max-width: 820px) {
+    grid-template-columns: 1fr;
+  }
+}
+
+.project-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+
+  &:hover {
+    transform: translateY(-6px);
+  }
+
+  .card-accent-bar {
+    height: 3px;
+    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
+  }
+
+  .card-body {
+    padding: clamp(1.25rem, 3vw, 1.75rem);
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    flex: 1;
+  }
+}
+
+.card-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.5rem;
+
+  .category-pill {
+    font-size: 0.72rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--primary);
+  }
+
+  .featured-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #f59e0b;
+    background: rgba(245, 158, 11, 0.12);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+    padding: 2px 8px;
+    border-radius: 9999px;
+  }
+}
+
+.project-title {
+  font-size: clamp(1.15rem, 2.5vw, 1.35rem);
+  font-weight: 800;
+  line-height: 1.25;
+  margin: 0;
+
+  a {
+    color: var(--text-main);
+    text-decoration: none;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--primary);
+    }
+  }
+}
+
+.project-description {
+  font-size: clamp(0.88rem, 1.8vw, 0.94rem);
+  line-height: 1.6;
+  color: var(--text-muted);
+  margin: 0;
+}
+
+.tech-stack {
+  margin-top: auto;
+  padding-top: 0.5rem;
+
+  .tech-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+  }
+}
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 0.75rem;
+  padding: 12px 18px;
+  background: rgba(0, 0, 0, 0.15);
+  border-top: 1px solid var(--border-subtle);
+
+  .project-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 0.82rem;
+    font-weight: 600;
+    text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+
+    &.source-btn {
+      color: var(--text-muted);
+      border: 1px solid var(--border-subtle);
+      background: rgba(255, 255, 255, 0.03);
+
+      &:hover {
+        color: var(--text-main);
+        border-color: rgba(var(--primary-rgb), 0.4);
+        background: rgba(var(--primary-rgb), 0.08);
+      }
+    }
+
+    &.demo-btn {
+      color: #ffffff;
+      background: linear-gradient(135deg, var(--primary) 0%, #0284c7 100%);
+      box-shadow: 0 2px 10px -1px rgba(var(--primary-rgb), 0.3);
+
+      &:hover {
+        filter: brightness(1.12);
+        transform: translateY(-1px);
+        box-shadow: 0 4px 14px -1px rgba(var(--primary-rgb), 0.5);
+      }
+    }
+  }
+}
