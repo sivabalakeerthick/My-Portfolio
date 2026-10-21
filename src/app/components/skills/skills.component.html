@@ -22,7 +22,9 @@
         <div class="category-info">
           <div class="title-row">
             <h3 class="category-heading">{{ category.title }}</h3>
-            <span *ngIf="category.featured" class="specialty-badge">Core Specialization</span>
+            <span *ngIf="category.featured" class="specialty-badge">
+              <i class="fa-solid fa-bolt" aria-hidden="true"></i> Core Specialization
+            </span>
           </div>
           <span class="skill-count">{{ category.skills.length }} Technologies</span>
         </div>

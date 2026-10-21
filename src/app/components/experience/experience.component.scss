@@ -1,298 +1,710 @@
+// Summary badge & pulse animations
 .exp-summary-badge {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
-  padding: 5px 14px;
+  gap: 10px;
+  padding: 6px 16px;
   border-radius: 9999px;
-  background: rgba(16, 185, 129, 0.1);
-  border: 1px solid rgba(16, 185, 129, 0.25);
+  background: rgba(16, 185, 129, 0.08);
+  border: 1px solid rgba(16, 185, 129, 0.28);
   color: #10b981;
-  font-size: 0.8rem;
-  font-weight: 600;
-  margin-top: 0.75rem;
+  font-size: 0.82rem;
+  font-weight: 700;
+  margin-top: 0.85rem;
+}
 
-  .live-indicator {
-    width: 7px;
-    height: 7px;
+.pulse-dot {
+  position: relative;
+  width: 8px;
+  height: 8px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  .dot-core {
+    width: 8px;
+    height: 8px;
     border-radius: 50%;
     background-color: #10b981;
-    box-shadow: 0 0 8px #10b981;
+    box-shadow: 0 0 10px #10b981;
+  }
+
+  .dot-ring {
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 2px solid rgba(16, 185, 129, 0.6);
+    animation: radarPing 2.2s cubic-bezier(0, 0, 0.2, 1) infinite;
   }
 }
 
+.pulse-dot-sm {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background-color: #10b981;
+  box-shadow: 0 0 8px #10b981;
+  display: inline-block;
+}
+
+@keyframes radarPing {
+  0% { transform: scale(0.5); opacity: 1; }
+  100% { transform: scale(2); opacity: 0; }
+}
+
+// Showcase wrapper
 .experience-showcase {
   display: flex;
   flex-direction: column;
   gap: 1.5rem;
   width: 100%;
-  max-width: 860px;
+  max-width: 920px;
   margin: 0 auto;
 }
 
-.experience-tabs {
+// Company Tabs (When multiple companies exist in future)
+.company-tabs-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.company-tabs {
   display: flex;
   gap: 0.75rem;
   justify-content: center;
   flex-wrap: wrap;
+}
 
-  .exp-tab {
-    display: flex;
+.company-tab-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  padding: 8px 18px;
+  border-radius: 9999px;
+  color: var(--text-muted);
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+  .company-role-count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.72rem;
+    color: var(--text-subtle);
+  }
+
+  .company-live-pill {
+    display: inline-flex;
     align-items: center;
-    gap: 8px;
-    background: var(--bg-surface);
-    border: 1px solid var(--border-subtle);
-    padding: 8px 16px;
-    border-radius: 12px;
-    color: var(--text-muted);
-    font-size: 0.88rem;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    gap: 4px;
+    font-size: 0.68rem;
+    padding: 2px 7px;
+    border-radius: 9999px;
+    background: rgba(16, 185, 129, 0.15);
+    color: #10b981;
+  }
 
-    &:hover {
-      border-color: rgba(var(--primary-rgb), 0.4);
-      color: var(--text-main);
-      transform: translateY(-2px);
-    }
+  &:hover {
+    border-color: rgba(var(--primary-rgb), 0.45);
+    color: var(--text-main);
+    transform: translateY(-2px);
+  }
 
-    &.active {
-      background: rgba(var(--primary-rgb), 0.12);
-      border-color: var(--primary);
-      color: var(--text-main);
-      box-shadow: 0 4px 20px -2px rgba(var(--primary-rgb), 0.25);
-
-      .company-name {
-        color: var(--primary);
-      }
-    }
-
-    .company-name {
-      font-weight: 700;
-    }
-
-    .role-preview {
-      font-size: 0.78rem;
-      opacity: 0.8;
-
-      @media (max-width: 480px) {
-        display: none;
-      }
-    }
-
-    .current-badge {
-      font-size: 0.68rem;
-      padding: 2px 7px;
-      border-radius: 9999px;
-      background: rgba(16, 185, 129, 0.2);
-      color: #10b981;
-      font-weight: 700;
-    }
+  &.active {
+    background: linear-gradient(135deg, rgba(var(--primary-rgb), 0.14) 0%, rgba(var(--primary-rgb), 0.04) 100%);
+    border-color: var(--primary);
+    color: var(--primary);
+    box-shadow: 0 4px 18px -2px rgba(var(--primary-rgb), 0.3);
   }
 }
 
-.experience-card-container {
+// Company Master Card: Grouping container for all roles
+.company-master-wrapper {
   width: 100%;
 }
 
-.experience-card {
+.company-master-card {
   position: relative;
-  border-radius: 18px;
+  border-radius: 20px;
   overflow: hidden;
   padding: 0;
+  box-shadow: 0 12px 36px -8px rgba(0, 0, 0, 0.25);
+  background: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  display: flex;
+  flex-direction: column;
+}
 
-  .card-glow-bar {
-    height: 3px;
-    background: linear-gradient(90deg, var(--primary) 0%, var(--accent) 100%);
-  }
+.card-glow-bar {
+  height: 4px;
+  width: 100%;
+  background: linear-gradient(
+    90deg,
+    var(--primary) 0%,
+    var(--accent) 50%,
+    #10b981 100%
+  );
+}
 
-  .card-main {
-    padding: clamp(1.4rem, 3.5vw, 2.2rem);
-    display: flex;
-    flex-direction: column;
-    gap: 1.5rem;
+// 1. Company Grouping Header
+.company-master-header {
+  padding: clamp(1rem, 2.5vw, 1.35rem) clamp(1.25rem, 3vw, 1.85rem);
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1.25rem;
+  background: linear-gradient(
+    180deg,
+    rgba(var(--primary-rgb), 0.06) 0%,
+    transparent 100%
+  );
+  border-bottom: 1px solid var(--border-subtle);
+
+  @media (max-width: 640px) {
+    padding: 1rem;
   }
 }
 
-.card-header {
+.company-branding {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.company-avatar-box {
+  width: 50px;
+  height: 50px;
+  border-radius: 14px;
+  background: linear-gradient(
+    135deg,
+    rgba(var(--primary-rgb), 0.18) 0%,
+    rgba(var(--primary-rgb), 0.05) 100%
+  );
+  border: 1px solid rgba(var(--primary-rgb), 0.35);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary);
+  font-size: 1.35rem;
+  box-shadow: 0 6px 16px -3px rgba(var(--primary-rgb), 0.25);
+  flex-shrink: 0;
+
+  @media (max-width: 480px) {
+    width: 42px;
+    height: 42px;
+    font-size: 1.15rem;
+  }
+}
+
+.company-meta-col {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.company-name-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.company-master-name {
+  font-size: clamp(1.25rem, 2.5vw, 1.6rem);
+  font-weight: 800;
+  letter-spacing: -0.02em;
+  color: var(--text-main);
+  margin: 0;
+  line-height: 1.2;
+}
+
+.company-live-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  background: rgba(16, 185, 129, 0.12);
+  border: 1px solid rgba(16, 185, 129, 0.3);
+  color: #10b981;
+}
+
+// 2. Role Progression Tabs
+.company-roles-nav {
+  padding: 1rem clamp(1rem, 2.5vw, 1.85rem) 0;
+}
+
+.roles-tabs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 0.75rem;
+
+  @media (max-width: 640px) {
+    grid-template-columns: 1fr;
+    gap: 0.5rem;
+  }
+}
+
+.role-step-tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--border-subtle);
+  padding: 9px 14px;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  text-align: left;
+  position: relative;
+
+  .step-num {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--primary);
+    background: rgba(var(--primary-rgb), 0.1);
+    padding: 3px 6px;
+    border-radius: 6px;
+    flex-shrink: 0;
+  }
+
+  .step-details {
+    display: flex;
+    flex-direction: column;
+    min-width: 0;
+    flex: 1;
+
+    .step-title {
+      font-size: 0.84rem;
+      font-weight: 700;
+      color: var(--text-muted);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      transition: color 0.2s ease;
+    }
+
+    .step-type {
+      font-size: 0.72rem;
+      color: var(--text-subtle);
+    }
+  }
+
+  .step-active-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background-color: #10b981;
+    box-shadow: 0 0 6px #10b981;
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    border-color: rgba(var(--primary-rgb), 0.4);
+    transform: translateY(-1px);
+
+    .step-title {
+      color: var(--text-main);
+    }
+  }
+
+  &.active {
+    background: linear-gradient(
+      135deg,
+      rgba(var(--primary-rgb), 0.14) 0%,
+      rgba(var(--primary-rgb), 0.03) 100%
+    );
+    border-color: var(--primary);
+    box-shadow: 0 4px 16px -2px rgba(var(--primary-rgb), 0.25);
+
+    .step-title {
+      color: var(--primary);
+      font-weight: 800;
+    }
+  }
+}
+
+// 3. Role Slide Viewport & Card Content
+.role-slide-viewport {
+  width: 100%;
+  touch-action: pan-y; // Allows fluid vertical page scroll while capturing horizontal swipes!
+  user-select: none;
+}
+
+.role-slide-card {
+  padding: clamp(1.25rem, 3vw, 1.85rem);
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  animation: slideFadeIn 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+
+  @media (max-width: 640px) {
+    padding: 1.15rem 1rem;
+    gap: 1.25rem;
+  }
+}
+
+@keyframes slideFadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+// Role Card Header
+.role-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding-bottom: 1.25rem;
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.role-title-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.role-primary-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  .role-position {
+    font-size: clamp(1.15rem, 2.2vw, 1.45rem);
+    font-weight: 800;
+    letter-spacing: -0.015em;
+    color: var(--text-main);
+    margin: 0;
+  }
+
+  .role-active-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    padding: 2px 8px;
+    border-radius: 9999px;
+    background: rgba(16, 185, 129, 0.12);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    color: #10b981;
+
+    .active-dot {
+      width: 5px;
+      height: 5px;
+      border-radius: 50%;
+      background-color: #10b981;
+      box-shadow: 0 0 6px #10b981;
+    }
+  }
+}
+
+.role-secondary-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  .role-badge {
+    font-size: 0.78rem;
+    font-weight: 700;
+    padding: 2px 9px;
+    border-radius: 6px;
+    background: rgba(var(--primary-rgb), 0.1);
+    color: var(--primary);
+  }
+}
+
+.role-meta-block {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+
+  @media (max-width: 640px) {
+    align-items: flex-start;
+  }
+}
+
+.role-date-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--primary);
+  background: rgba(var(--primary-rgb), 0.08);
+  border: 1px solid rgba(var(--primary-rgb), 0.22);
+  padding: 4px 10px;
+  border-radius: 8px;
+
+  i {
+    font-size: 0.75rem;
+  }
+}
+
+.role-loc-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.76rem;
+  color: var(--text-subtle);
+
+  i {
+    color: var(--primary);
+    font-size: 0.72rem;
+  }
+}
+
+// Role Responsibilities
+.role-responsibilities {
   display: flex;
   flex-direction: column;
   gap: 0.85rem;
-  border-bottom: 1px solid var(--border-subtle);
-  padding-bottom: 1.25rem;
-
-  .title-group {
-    display: flex;
-    flex-direction: column;
-    gap: 0.4rem;
-
-    .position {
-      font-size: clamp(1.3rem, 3vw, 1.6rem);
-      font-weight: 800;
-      color: var(--text-main);
-      letter-spacing: -0.02em;
-    }
-
-    .company-row {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-
-      .company {
-        font-size: 1.05rem;
-        font-weight: 700;
-        color: var(--primary);
-      }
-
-      .role-tag {
-        font-size: 0.78rem;
-        font-weight: 600;
-        background: var(--chip-bg);
-        border: 1px solid var(--chip-border);
-        color: var(--chip-text);
-        padding: 2px 10px;
-        border-radius: 9999px;
-      }
-    }
-  }
-
-  .meta-badges {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-
-    .duration-badge,
-    .location-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      font-size: 0.82rem;
-      color: var(--text-muted);
-      background: rgba(255, 255, 255, 0.04);
-      padding: 4px 10px;
-      border-radius: 8px;
-      border: 1px solid var(--border-subtle);
-
-      i {
-        color: var(--primary);
-        font-size: 0.8rem;
-      }
-    }
-  }
 }
 
-.responsibilities-section {
-  display: flex;
-  flex-direction: column;
-  gap: 0.75rem;
+.responsibilities-title {
+  font-size: 0.82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-subtle);
+  margin: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
 
-  .section-label {
+  i {
+    color: var(--primary);
     font-size: 0.82rem;
-    font-weight: 700;
-    color: var(--text-subtle);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
   }
+}
 
-  .responsibilities-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+.contributions-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+
+  li {
     display: flex;
-    flex-direction: column;
-    gap: 0.75rem;
+    align-items: flex-start;
+    gap: 12px;
+    font-size: 0.92rem;
+    line-height: 1.6;
+    color: var(--text-muted);
+    transition: color 0.2s ease;
 
-    li {
-      display: flex;
-      align-items: flex-start;
-      gap: 0.75rem;
-      font-size: clamp(0.9rem, 1.8vw, 0.98rem);
-      line-height: 1.6;
-      color: var(--text-muted);
+    &:hover {
+      color: var(--text-main);
 
-      .bullet-glow {
-        flex-shrink: 0;
-        width: 6px;
-        height: 6px;
-        border-radius: 50%;
-        background-color: var(--primary);
-        box-shadow: 0 0 6px var(--primary);
-        margin-top: 9px;
+      .bullet-icon {
+        color: var(--primary);
+        transform: scale(1.15);
       }
+    }
+
+    .bullet-icon {
+      flex-shrink: 0;
+      width: 18px;
+      height: 18px;
+      border-radius: 6px;
+      background: rgba(var(--primary-rgb), 0.12);
+      border: 1px solid rgba(var(--primary-rgb), 0.25);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--primary);
+      font-size: 0.68rem;
+      margin-top: 3px;
+      transition: all 0.2s ease;
     }
   }
 }
 
-.tech-stack-row {
+// Tech Stack
+.role-tech-stack {
   display: flex;
   flex-direction: column;
-  gap: 0.5rem;
-  padding-top: 1rem;
+  gap: 0.65rem;
+  padding-top: 1.15rem;
   border-top: 1px solid var(--border-subtle);
+}
 
-  .tech-label {
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--text-subtle);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
+.tech-stack-title {
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--text-subtle);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
 
-  .tech-chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.45rem;
+  i {
+    color: var(--primary);
+    font-size: 0.8rem;
   }
 }
 
-.card-navigation {
+.tech-chips-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tech-chip {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--border-subtle);
+  padding: 4px 10px;
+  border-radius: 6px;
+  transition: all 0.2s ease;
+
+  &:hover {
+    color: var(--primary);
+    border-color: rgba(var(--primary-rgb), 0.45);
+    background: rgba(var(--primary-rgb), 0.08);
+    transform: translateY(-1px);
+  }
+}
+
+// 4. Slide Navigation Controller
+.slide-navigation-bar {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 10px 18px;
-  background: rgba(0, 0, 0, 0.15);
+  padding: 12px 22px;
+  background: rgba(0, 0, 0, 0.16);
   border-top: 1px solid var(--border-subtle);
 
-  .nav-arrow {
-    background: none;
-    border: none;
+  // Desktop navigation arrows
+  .slide-nav-btn {
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid var(--border-subtle);
     color: var(--text-muted);
-    font-size: 0.95rem;
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    display: flex;
+    font-size: 0.86rem;
+    font-weight: 600;
+    padding: 7px 16px;
+    border-radius: 10px;
+    display: inline-flex;
     align-items: center;
-    justify-content: center;
+    gap: 8px;
     cursor: pointer;
-    transition: all 0.2s ease;
+    transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 
     &:hover {
       color: var(--primary);
+      border-color: rgba(var(--primary-rgb), 0.45);
       background: rgba(var(--primary-rgb), 0.1);
+      transform: translateY(-1px);
+    }
+
+    &:active {
+      transform: translateY(0);
     }
   }
 
-  .indicators {
+  // Navigation Center (Indicators & Counter)
+  .slide-nav-center {
     display: flex;
-    gap: 6px;
+    align-items: center;
+    gap: 1rem;
 
-    .dot-btn {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      border: none;
-      background: var(--text-subtle);
-      opacity: 0.4;
-      cursor: pointer;
-      padding: 0;
-      transition: all 0.2s ease;
+    .slide-indicators {
+      display: flex;
+      gap: 6px;
+      align-items: center;
 
-      &.active {
-        width: 22px;
+      .indicator-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        border: none;
+        background: var(--text-subtle);
+        opacity: 0.4;
+        cursor: pointer;
+        padding: 0;
+        transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+
+        &.active {
+          width: 24px;
+          border-radius: 9999px;
+          background: linear-gradient(90deg, var(--primary), var(--accent));
+          opacity: 1;
+          box-shadow: 0 0 10px rgba(var(--primary-rgb), 0.5);
+        }
+      }
+    }
+
+    .slide-counter {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      color: var(--primary);
+      background: rgba(var(--primary-rgb), 0.08);
+      padding: 2px 8px;
+      border-radius: 6px;
+      border: 1px solid rgba(var(--primary-rgb), 0.2);
+    }
+
+    .mobile-swipe-hint {
+      display: none; // Hidden on desktop/tablet
+    }
+  }
+
+  // MOBILE DESIGN SPECIFIC:
+  // User instruction: "remove that left right arrow in slides in mobile design because in mobile we swipe it riight"
+  @media (max-width: 640px) {
+    justify-content: center;
+    padding: 10px 16px;
+
+    .slide-nav-btn {
+      display: none !important; // Completely remove arrows on mobile!
+    }
+
+    .slide-nav-center {
+      justify-content: center;
+      gap: 0.85rem;
+
+      .mobile-swipe-hint {
+        display: inline-flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 0.72rem;
+        font-weight: 600;
+        color: var(--text-subtle);
+        background: rgba(255, 255, 255, 0.03);
+        padding: 2px 8px;
         border-radius: 9999px;
-        background: var(--primary);
-        opacity: 1;
+        border: 1px solid var(--border-subtle);
+
+        i {
+          color: var(--primary);
+          font-size: 0.7rem;
+        }
       }
     }
   }

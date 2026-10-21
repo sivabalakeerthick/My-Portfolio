@@ -16,9 +16,12 @@
     </ul>
 
     <div class="nav-actions">
-      <div class="status-pill" title="Currently open to new roles & collaborations">
+      <div
+        class="status-pill"
+        [class.busy]="!configService.currentConfig.openToWork"
+        [title]="configService.currentConfig.openToWork ? 'Open to opportunities: ' + configService.currentConfig.availabilityStatus : 'Currently focused on ongoing engagements'">
         <span class="pulse-dot" aria-hidden="true"></span>
-        <span class="status-text">Available</span>
+        <span class="status-text">{{ configService.currentConfig.openToWork ? 'Available' : 'Engaged' }}</span>
       </div>
 
       <button
@@ -53,5 +56,14 @@
       <li><a [class.active]="activeSection === 'education'" href="#education" (click)="closeMobileMenu()">Education</a></li>
       <li><a [class.active]="activeSection === 'contact'" href="#contact" (click)="closeMobileMenu()">Contact</a></li>
     </ul>
+
+    <div
+      class="mobile-drawer-status"
+      [class.busy]="!configService.currentConfig.openToWork">
+      <span class="pulse-dot" aria-hidden="true"></span>
+      <span class="status-text">
+        {{ configService.currentConfig.openToWork ? ('Available: ' + configService.currentConfig.availabilityStatus) : 'Currently Engaged' }}
+      </span>
+    </div>
   </div>
 </header>

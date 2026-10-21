@@ -2,7 +2,7 @@
 
 A modern, responsive personal developer portfolio engineered with **Angular 22**, **TypeScript**, and modern **SCSS**, backed by a secure **Node.js** REST API.
 
-🌐 **Live Demo:** [https://portfolio-sivabalakeerthick.web.app/](https://portfolio-sivabalakeerthick.web.app/)
+🌐 **Live Demo:** [https://sivabalakeerthick.web.app/](https://sivabalakeerthick.web.app/)
 
 ---
 
@@ -93,11 +93,7 @@ The résumé is powered by **Supabase Cloud Storage**:
 ## 👤 Author
 
 **Siva Bala Keerthick G**
-- **Portfolio:** [portfolio-sivabalakeerthick.web.app](https://portfolio-sivabalakeerthick.web.app/)
-- **GitHub:** [@sivabalakeerthick](https://github.com/sivabalakeerthick)
+- **Portfolio:** [sivabalakeerthick.web.app](https://sivabalakeerthick.web.app/)
 - **LinkedIn:** [sivabalakeerthick](https://linkedin.com/in/sivabalakeerthick)
 
 ---
-
-## 📄 License
-This project is open source and available under the [MIT License](LICENSE).

@@ -1,5 +1,14 @@
 {
   "projects": {
     "default": "portfolio-sivabalakeerthick"
+  },
+  "targets": {
+    "portfolio-sivabalakeerthick": {
+      "hosting": {
+        "sivabalakeerthick": [
+          "sivabalakeerthick"
+        ]
+      }
+    }
   }
 }

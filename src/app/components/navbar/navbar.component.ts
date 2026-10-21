@@ -1,5 +1,7 @@
-import { Component, OnInit, HostListener } from '@angular/core';
+import { Component, OnInit, OnDestroy, HostListener, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
+import { PortfolioConfigService } from '../../services/portfolio-config.service';
 
 @Component({
   selector: 'app-navbar',
@@ -8,12 +10,18 @@ import { CommonModule } from '@angular/common';
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss'
 })
-export class NavbarComponent implements OnInit {
+export class NavbarComponent implements OnInit, OnDestroy {
   isDarkMode = true;
   activeSection = 'hero';
   isMobileMenuOpen = false;
 
   private readonly sections = ['hero', 'experience', 'freelancing', 'skills', 'projects', 'education', 'contact'];
+  private configSub?: Subscription;
+
+  constructor(
+    public configService: PortfolioConfigService,
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit(): void {
     const savedTheme = localStorage.getItem('theme');
@@ -23,6 +31,14 @@ export class NavbarComponent implements OnInit {
       this.isDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches;
     }
     this.applyTheme();
+
+    this.configSub = this.configService.config$.subscribe(() => {
+      this.cdr.markForCheck();
+    });
+  }
+
+  ngOnDestroy(): void {
+    this.configSub?.unsubscribe();
   }
 
   @HostListener('window:scroll', [])

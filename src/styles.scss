@@ -188,10 +188,22 @@ body:not(.dark-mode) .gradient-text {
   max-width: 1240px;
   margin: 0 auto;
 
+  @media (max-width: 480px) {
+    padding: clamp(60px, 10vh, 85px) 1rem clamp(50px, 8vh, 70px);
+  }
+
   .section-header {
     text-align: center;
     margin-bottom: clamp(2rem, 4vh, 3.25rem);
     max-width: 680px;
+
+    @media (max-width: 480px) {
+      margin-bottom: 1.75rem;
+
+      .section-title {
+        font-size: clamp(1.65rem, 7vw, 2.2rem);
+      }
+    }
 
     .section-eyebrow {
       display: inline-flex;
@@ -360,4 +372,9 @@ body.dark-mode #ambient-canvas {
 main {
   position: relative;
   z-index: 1;
+}
+
+@keyframes buttonSpin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }

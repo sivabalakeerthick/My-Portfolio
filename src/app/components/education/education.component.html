@@ -10,23 +10,59 @@
     </p>
   </div>
 
-  <div class="education-grid" data-aos="fade-up" data-aos-delay="100">
-    <article *ngFor="let item of educationList" class="education-card glass-card">
-      <div class="edu-icon-badge">
-        <i [class]="item.icon || 'fa-solid fa-graduation-cap'" aria-hidden="true"></i>
-      </div>
-      <div class="edu-body">
-        <div class="edu-top">
-          <h3 class="degree-title">{{ item.degree }}</h3>
-          <span class="education-year">{{ item.year }}</span>
+  <div class="education-timeline" data-aos="fade-up" data-aos-delay="100">
+    <div class="timeline-line" aria-hidden="true"></div>
+
+    <div class="timeline-items">
+      <article *ngFor="let item of educationList; let i = index" class="education-item">
+        <div class="timeline-marker" aria-hidden="true">
+          <div class="node-glow"></div>
+          <div class="edu-icon-badge">
+            <i [class]="item.icon || 'fa-solid fa-graduation-cap'" aria-hidden="true"></i>
+          </div>
         </div>
-        <p class="institution-name">{{ item.institution }}</p>
-        <div *ngIf="item.location" class="location-row">
-          <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
-          <span>{{ item.location }}</span>
+
+        <div class="education-card glass-card">
+          <div class="card-accent-bar" aria-hidden="true"></div>
+
+          <div class="edu-body">
+            <div class="edu-header">
+              <div class="title-meta">
+                <span class="milestone-tag">Milestone 0{{ i + 1 }}</span>
+                <h3 class="degree-title">{{ item.degree }}</h3>
+              </div>
+              <span class="education-year">
+                <i class="fa-regular fa-calendar-days" aria-hidden="true"></i>
+                {{ item.year }}
+              </span>
+            </div>
+
+            <div class="institution-row">
+              <i class="fa-solid fa-building-columns" aria-hidden="true"></i>
+              <a
+                *ngIf="item.url; else noInstitutionLink"
+                [href]="item.url"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="institution-link"
+                [attr.aria-label]="item.institution + ' website (opens in new tab)'">
+                <span>{{ item.institution }}</span>
+                <i class="fa-solid fa-arrow-up-right-from-square external-icon" aria-hidden="true"></i>
+              </a>
+              <ng-template #noInstitutionLink>
+                <span class="institution-name">{{ item.institution }}</span>
+              </ng-template>
+            </div>
+
+            <div *ngIf="item.location" class="location-row">
+              <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+              <span>{{ item.location }}</span>
+            </div>
+
+            <p *ngIf="item.details" class="edu-details">{{ item.details }}</p>
+          </div>
         </div>
-        <p *ngIf="item.details" class="edu-details">{{ item.details }}</p>
-      </div>
-    </article>
+      </article>
+    </div>
   </div>
 </section>

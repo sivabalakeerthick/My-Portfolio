@@ -1,6 +1,17 @@
-import { Component, OnInit, OnDestroy, ElementRef, ViewChild } from '@angular/core';
+import {
+  Component,
+  OnInit,
+  OnDestroy,
+  ElementRef,
+  ViewChild,
+  ChangeDetectorRef,
+  NgZone,
+  HostListener
+} from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Subscription } from 'rxjs';
 import { ResumeService } from '../../services/resume.service';
+import { PortfolioConfigService } from '../../services/portfolio-config.service';
 
 @Component({
   selector: 'app-hero',
@@ -12,14 +23,21 @@ import { ResumeService } from '../../services/resume.service';
 export class HeroComponent implements OnInit, OnDestroy {
   @ViewChild('codeCard') codeCardRef?: ElementRef<HTMLDivElement>;
 
-  constructor(public resumeService: ResumeService) {}
+  private configSub?: Subscription;
+
+  constructor(
+    public resumeService: ResumeService,
+    public configService: PortfolioConfigService,
+    private cdr: ChangeDetectorRef,
+    private ngZone: NgZone
+  ) {}
 
   roles: string[] = [
     'Full Stack Developer',
     'Angular & Spring Boot Specialist',
     'Agentic RAG & AI Engineer',
     'Enterprise Frontend Engineer',
-    'UI/UX & Performance Enthusiast'
+    'Backend Developer'
   ];
 
   displayedRole = '';
@@ -27,6 +45,7 @@ export class HeroComponent implements OnInit, OnDestroy {
   private currentCharIndex = 0;
   private isDeleting = false;
   private typingTimer: any = null;
+  private isDestroyed = false;
 
   copiedCode = false;
 
@@ -42,39 +61,116 @@ export class HeroComponent implements OnInit, OnDestroy {
 };`;
 
   ngOnInit(): void {
-    this.typeNextChar();
+    this.startTypewriter();
+    this.configSub = this.configService.config$.subscribe((cfg) => {
+      this.codeSnippet = `const engineer: FullStackDev = {
+  name: 'Siva Bala Keerthick G',
+  company: 'Cognizant',
+  role: '${cfg.targetRole || 'Programmer Analyst'}',
+  currentLocation: '${cfg.primaryLocation}',
+  frontend: ['Angular', 'TypeScript', 'Axis'],
+  backend: ['Spring Boot', 'Java', 'MySQL'],
+  tools: ['Git', 'Docker', 'Firebase'],
+  openToWork: ${cfg.openToWork}
+};`;
+      this.cdr.detectChanges();
+    });
   }
 
   ngOnDestroy(): void {
-    if (this.typingTimer) {
-      clearTimeout(this.typingTimer);
+    this.isDestroyed = true;
+    this.clearTimer();
+    this.configSub?.unsubscribe();
+  }
+
+  @HostListener('document:visibilitychange')
+  onVisibilityChange(): void {
+    if (this.isDestroyed) return;
+    if (typeof document !== 'undefined' && document.hidden) {
+      // Pause animation when tab is in background to prevent queued timeouts
+      this.clearTimer();
+    } else {
+      // Cleanly resume when tab is active
+      this.clearTimer();
+      this.scheduleNext(150);
     }
   }
 
+  private clearTimer(): void {
+    if (this.typingTimer !== null) {
+      clearTimeout(this.typingTimer);
+      this.typingTimer = null;
+    }
+  }
+
+  private scheduleNext(delay: number): void {
+    if (this.isDestroyed) return;
+    this.clearTimer();
+
+    // Run timeout outside Angular zone to avoid Zone.js overhead
+    this.ngZone.runOutsideAngular(() => {
+      this.typingTimer = setTimeout(() => {
+        if (this.isDestroyed) return;
+        this.typeNextChar();
+      }, delay);
+    });
+  }
+
+  private startTypewriter(): void {
+    this.scheduleNext(200);
+  }
+
   private typeNextChar(): void {
+    if (this.isDestroyed) return;
+    if (!this.roles || this.roles.length === 0) return;
+
+    if (this.currentRoleIndex >= this.roles.length) {
+      this.currentRoleIndex = 0;
+    }
+
     const fullRole = this.roles[this.currentRoleIndex];
 
     if (!this.isDeleting) {
-      this.displayedRole = fullRole.substring(0, this.currentCharIndex + 1);
-      this.currentCharIndex++;
+      // Forward typing
+      if (this.currentCharIndex < fullRole.length) {
+        this.currentCharIndex++;
+        this.displayedRole = fullRole.substring(0, this.currentCharIndex);
+        this.cdr.detectChanges();
+      }
 
-      if (this.currentCharIndex === fullRole.length) {
+      // Reached full string
+      if (this.currentCharIndex >= fullRole.length) {
         this.isDeleting = true;
-        this.typingTimer = setTimeout(() => this.typeNextChar(), 2000);
+        // Hold full text for 1500ms for readable reading pause
+        this.scheduleNext(1500);
         return;
       }
-      this.typingTimer = setTimeout(() => this.typeNextChar(), 70);
-    } else {
-      this.displayedRole = fullRole.substring(0, this.currentCharIndex - 1);
-      this.currentCharIndex--;
 
-      if (this.currentCharIndex === 0) {
+      // Smooth typing pace (65ms)
+      this.scheduleNext(65);
+    } else {
+      // Backspacing
+      if (this.currentCharIndex > 0) {
+        this.currentCharIndex--;
+        this.displayedRole = fullRole.substring(0, this.currentCharIndex);
+        this.cdr.detectChanges();
+      }
+
+      // Fully cleared string
+      if (this.currentCharIndex <= 0) {
         this.isDeleting = false;
+        this.currentCharIndex = 0;
+        this.displayedRole = '';
         this.currentRoleIndex = (this.currentRoleIndex + 1) % this.roles.length;
-        this.typingTimer = setTimeout(() => this.typeNextChar(), 500);
+        this.cdr.detectChanges();
+
+        // Brief 350ms pause before starting next word
+        this.scheduleNext(350);
         return;
       }
-      this.typingTimer = setTimeout(() => this.typeNextChar(), 35);
+
+      // Fast backspacing cadence (28ms)
+      this.scheduleNext(28);
     }
   }
 
@@ -116,6 +212,8 @@ export class HeroComponent implements OnInit, OnDestroy {
     if (!this.resumeService.isAvailable()) {
       event.preventDefault();
       alert('Resume is currently being updated. Please contact me directly via the Contact section!');
+      return;
     }
+    this.configService.trackResumeDownload();
   }
 }

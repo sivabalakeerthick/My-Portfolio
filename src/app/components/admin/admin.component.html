@@ -7,15 +7,16 @@
 
     <h2 class="auth-title">Portfolio Control Center</h2>
     <p class="auth-subtitle">
-      This management area is restricted. Enter the administrator password to manage your live resume.
+      This management area is restricted. Enter the administrator password to control live portfolio settings, availability & analytics.
     </p>
 
-    <form (ngSubmit)="onLogin()" class="auth-form">
+    <form (submit)="$event.preventDefault()" class="auth-form">
       <div class="input-wrap">
         <i class="fa-solid fa-key input-icon" aria-hidden="true"></i>
         <input
           [type]="showPassword ? 'text' : 'password'"
           [(ngModel)]="passwordInput"
+          (keydown.enter)="onLogin()"
           name="adminPassword"
           placeholder="Enter Admin Password..."
           autocomplete="current-password"
@@ -24,8 +25,10 @@
         <button
           type="button"
           class="eye-toggle-btn"
-          (click)="togglePasswordVisibility()"
-          [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'">
+          (mousedown)="$event.preventDefault()"
+          (click)="togglePasswordVisibility($event)"
+          [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+          tabindex="-1">
           <i class="fa-solid" [ngClass]="showPassword ? 'fa-eye-slash' : 'fa-eye'"></i>
         </button>
       </div>
@@ -36,7 +39,11 @@
       </div>
 
       <div class="auth-actions">
-        <button type="submit" class="btn btn-primary submit-auth-btn" [disabled]="isLoggingIn">
+        <button
+          type="button"
+          class="btn btn-primary submit-auth-btn"
+          (click)="onLogin()"
+          [disabled]="isLoggingIn">
           <i class="fa-solid fa-circle-notch fa-spin" *ngIf="isLoggingIn"></i>
           <span>{{ isLoggingIn ? 'Verifying...' : 'Unlock Admin Panel' }}</span>
           <i class="fa-solid fa-arrow-right" *ngIf="!isLoggingIn"></i>
@@ -50,17 +57,17 @@
     </form>
   </div>
 
-  <!-- Authenticated: Resume Control Dashboard -->
+  <!-- Authenticated: Portfolio Control Dashboard -->
   <div *ngIf="isAuthenticated" class="admin-dashboard">
     <!-- Top Bar -->
     <header class="dashboard-header glass-card">
       <div class="header-left">
         <div class="header-icon">
-          <i class="fa-solid fa-file-shield" aria-hidden="true"></i>
+          <i class="fa-solid fa-sliders" aria-hidden="true"></i>
         </div>
         <div>
-          <h1 class="header-title">Resume Management System</h1>
-          <p class="header-sub">Upload, delete, and control the active resume served to all portfolio visitors.</p>
+          <h1 class="header-title">Portfolio Control Center</h1>
+          <p class="header-sub">Live availability controller, interaction analytics, and project visibility manager.</p>
         </div>
       </div>
 
@@ -89,162 +96,512 @@
       <button class="alert-close" (click)="errorMessage = ''">&times;</button>
     </div>
 
-    <!-- Main Grid -->
-    <div class="dashboard-grid">
-      <!-- Card 1: Active Resume Status -->
-      <article class="dash-card status-card glass-card">
+    <!-- Navigation Tabs -->
+    <nav class="admin-nav-tabs" role="tablist" aria-label="Admin Sections">
+      <button
+        class="admin-tab-btn"
+        [class.active]="activeTab === 'analytics'"
+        (click)="selectTab('analytics')"
+        role="tab">
+        <i class="fa-solid fa-chart-line"></i>
+        <span>Analytics & Tracker</span>
+        <span class="tab-chip">{{ stats.resumeDownloads }} DL</span>
+      </button>
+
+      <button
+        class="admin-tab-btn"
+        [class.active]="activeTab === 'availability'"
+        (click)="selectTab('availability')"
+        role="tab">
+        <i class="fa-solid fa-signal"></i>
+        <span>Live Availability</span>
+        <span class="status-indicator-dot" [class.open]="editConfig.openToWork"></span>
+      </button>
+
+      <button
+        class="admin-tab-btn"
+        [class.active]="activeTab === 'projects'"
+        (click)="selectTab('projects')"
+        role="tab">
+        <i class="fa-solid fa-layer-group"></i>
+        <span>Project Visibility</span>
+      </button>
+
+      <button
+        class="admin-tab-btn"
+        [class.active]="activeTab === 'resume'"
+        (click)="selectTab('resume')"
+        role="tab">
+        <i class="fa-solid fa-file-pdf"></i>
+        <span>Résumé Storage</span>
+      </button>
+    </nav>
+
+    <!-- ========================================== -->
+    <!-- TAB 1: ANALYTICS & INTERACTION TRACKER (OPTION 3) -->
+    <!-- ========================================== -->
+    <div *ngIf="activeTab === 'analytics'" class="tab-content" data-aos="fade-up">
+      <!-- 4 Top KPI Cards -->
+      <div class="kpi-grid">
+        <div class="kpi-card glass-card">
+          <div class="kpi-icon-wrap primary">
+            <i class="fa-solid fa-download"></i>
+          </div>
+          <div class="kpi-meta">
+            <span class="kpi-label">Résumé Downloads</span>
+            <span class="kpi-value">{{ stats.resumeDownloads }}</span>
+            <span class="kpi-sub" *ngIf="stats.lastResumeDownloadAt">Last: {{ stats.lastResumeDownloadAt }}</span>
+          </div>
+        </div>
+
+        <div class="kpi-card glass-card">
+          <div class="kpi-icon-wrap accent">
+            <i class="fa-solid fa-arrow-pointer"></i>
+          </div>
+          <div class="kpi-meta">
+            <span class="kpi-label">Project Link Clicks</span>
+            <span class="kpi-value">{{ totalProjectClicks }}</span>
+            <span class="kpi-sub">Across all portfolio demos</span>
+          </div>
+        </div>
+
+        <div class="kpi-card glass-card">
+          <div class="kpi-icon-wrap green">
+            <i class="fa-solid fa-eye"></i>
+          </div>
+          <div class="kpi-meta">
+            <span class="kpi-label">Total Portfolio Visits</span>
+            <span class="kpi-value">{{ stats.totalVisits }}</span>
+            <span class="kpi-sub">Unique browser sessions</span>
+          </div>
+        </div>
+
+        <div class="kpi-card glass-card">
+          <div class="kpi-icon-wrap amber">
+            <i class="fa-solid fa-bolt"></i>
+          </div>
+          <div class="kpi-meta">
+            <span class="kpi-label">Recruiter Status</span>
+            <span class="kpi-value status-text" [class.active]="editConfig.openToWork">
+              {{ editConfig.openToWork ? 'Open to Work' : 'Occupied' }}
+            </span>
+            <span class="kpi-sub">{{ editConfig.noticePeriod }}</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Detailed Click Breakdown -->
+      <article class="dash-card glass-card">
         <div class="card-title-row">
           <h3 class="card-heading">
-            <i class="fa-solid fa-file-lines accent-icon"></i>
-            <span>Current Active Resume</span>
+            <i class="fa-solid fa-chart-pie accent-icon"></i>
+            <span>Project & Interaction Breakdown</span>
           </h3>
-          <span
-            class="status-pill"
-            [class.active]="!resumeState?.isDeleted"
-            [class.deleted]="resumeState?.isDeleted">
-            <span class="status-dot"></span>
-            {{ resumeState?.isDeleted ? 'Deleted / Hidden' : 'Active & Published' }}
-          </span>
-        </div>
-
-        <div class="status-details">
-          <div class="detail-row">
-            <span class="detail-label">File Name:</span>
-            <span class="detail-val file-val">{{ resumeState?.fileName }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">File Size:</span>
-            <span class="detail-val">{{ resumeState?.fileSize || 'Standard' }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Last Updated:</span>
-            <span class="detail-val">{{ resumeState?.uploadDate }}</span>
-          </div>
-          <div class="detail-row">
-            <span class="detail-label">Storage Type:</span>
-            <span class="detail-val">{{ getStorageType() }}</span>
-          </div>
-        </div>
-
-        <div class="status-actions">
-          <button
-            class="btn btn-primary"
-            (click)="downloadCurrent()"
-            [disabled]="resumeState?.isDeleted">
-            <i class="fa-solid fa-download"></i>
-            <span>Test Download / Preview</span>
-          </button>
-
-          <button
-            class="btn btn-danger delete-btn"
-            (click)="onDeleteResume()"
-            [disabled]="resumeState?.isDeleted">
-            <i class="fa-solid fa-trash-can"></i>
-            <span>Delete Resume</span>
+          <button class="btn btn-secondary reset-stats-btn" (click)="onResetAnalytics()">
+            <i class="fa-solid fa-rotate-right"></i>
+            <span>Reset Counters</span>
           </button>
         </div>
-      </article>
 
-      <!-- Card 2: Upload New Resume -->
-      <article class="dash-card upload-card glass-card">
-        <h3 class="card-heading">
-          <i class="fa-solid fa-cloud-arrow-up accent-icon"></i>
-          <span>Upload Updated Resume</span>
-        </h3>
-        <p class="card-description">
-          Upload a new PDF to immediately update the download file for all visitors.
-        </p>
-
-        <!-- Dropzone -->
-        <div
-          class="dropzone"
-          [class.dragging]="isDragging"
-          (dragover)="onDragOver($event)"
-          (dragleave)="onDragLeave($event)"
-          (drop)="onDrop($event)">
-          <input
-            #fileInput
-            type="file"
-            accept=".pdf,application/pdf"
-            (change)="onFileChange($event)"
-            class="file-input-hidden" />
-
-          <div class="dropzone-inner" (click)="fileInput.click()">
-            <div class="upload-icon-bubble">
-              <i class="fa-solid fa-file-pdf"></i>
+        <div class="stats-table">
+          <div class="stat-row">
+            <div class="stat-item-info">
+              <i class="fa-solid fa-brain stat-icon"></i>
+              <div>
+                <strong>CogniDoc — Enterprise Agentic RAG Platform</strong>
+                <span class="stat-type">Demo & GitHub Link Clicks</span>
+              </div>
             </div>
-            <p class="dropzone-text">
-              <strong>Click to browse</strong> or drag & drop your updated PDF here
-            </p>
-            <span class="dropzone-hint">Supported format: PDF (.pdf) • Up to 10 MB</span>
+            <span class="stat-badge primary">{{ stats.projectClicks['cognidoc'] || 0 }} Clicks</span>
           </div>
-        </div>
 
-        <!-- Selected File Preview -->
-        <div *ngIf="selectedFile" class="selected-file-bar">
-          <div class="file-info">
-            <i class="fa-solid fa-file-circle-check text-primary"></i>
-            <span class="file-name">{{ selectedFile.name }}</span>
-            <span class="file-size">({{ (selectedFile.size / 1024).toFixed(1) }} KB)</span>
+          <div class="stat-row">
+            <div class="stat-item-info">
+              <i class="fa-solid fa-boxes-stacked stat-icon"></i>
+              <div>
+                <strong>Inventory Management System</strong>
+                <span class="stat-type">Full Stack REST Architecture</span>
+              </div>
+            </div>
+            <span class="stat-badge">{{ stats.projectClicks['inventory-system'] || 0 }} Clicks</span>
           </div>
-          <button class="btn btn-primary publish-btn" (click)="onUploadResume()" [disabled]="isUploading">
-            <i class="fa-solid fa-circle-notch fa-spin" *ngIf="isUploading"></i>
-            <i class="fa-solid fa-cloud-arrow-up" *ngIf="!isUploading"></i>
-            <span>{{ isUploading ? 'Uploading...' : 'Publish & Replace Resume' }}</span>
-          </button>
-        </div>
-      </article>
 
-      <!-- Card 3: Cloud Resume Link Option -->
-      <article class="dash-card cloud-card glass-card">
-        <h3 class="card-heading">
-          <i class="fa-solid fa-link accent-icon"></i>
-          <span>Option B: Direct Cloud / Google Drive Link</span>
-        </h3>
-        <p class="card-description">
-          Alternatively, link directly to a publicly hosted PDF (e.g. Google Drive, Dropbox, or OneDrive link).
-        </p>
+          <div class="stat-row">
+            <div class="stat-item-info">
+              <i class="fa-solid fa-laptop-code stat-icon"></i>
+              <div>
+                <strong>Personal Portfolio Website</strong>
+                <span class="stat-type">Source Code & Repository Clicks</span>
+              </div>
+            </div>
+            <span class="stat-badge">{{ stats.projectClicks['portfolio'] || 0 }} Clicks</span>
+          </div>
 
-        <div class="cloud-input-group">
-          <input
-            type="url"
-            [(ngModel)]="cloudUrlInput"
-            placeholder="https://drive.google.com/... or https://..."
-            class="cloud-url-input" />
-          <button class="btn btn-secondary apply-cloud-btn" (click)="onSaveCloudUrl()">
-            <i class="fa-solid fa-check"></i>
-            <span>Set Cloud URL</span>
-          </button>
-        </div>
-      </article>
-
-      <!-- Card 4: Reset & Deployment Info -->
-      <article class="dash-card reset-card glass-card">
-        <h3 class="card-heading">
-          <i class="fa-solid fa-rotate-left accent-icon"></i>
-          <span>Restore Default Supabase Résumé</span>
-        </h3>
-        <p class="card-description">
-          Reset back to the default Supabase Cloud storage link or overwrite your file in Supabase.
-        </p>
-
-        <div class="restore-actions">
-          <button class="btn btn-secondary restore-btn" (click)="onRestoreDefault()">
-            <i class="fa-solid fa-arrow-rotate-left"></i>
-            <span>Restore Default Supabase Resume</span>
-          </button>
-        </div>
-
-        <div class="info-tip-box">
-          <i class="fa-solid fa-lightbulb text-accent"></i>
-          <div>
-            <strong>Instant Supabase Cloud Updates:</strong>
-            <p>
-              To update your resume anytime without writing code or redeploying, open your <strong>Supabase Dashboard &rarr; Storage &rarr; resume</strong> bucket, upload your new PDF, and check <em>"Overwrite existing file"</em>.
-            </p>
+          <div class="stat-row">
+            <div class="stat-item-info">
+              <i class="fa-solid fa-building-user stat-icon"></i>
+              <div>
+                <strong>Architectural Platform (Freelance App)</strong>
+                <span class="stat-type">Live Client App Visits (thivagar.vercel.app)</span>
+              </div>
+            </div>
+            <span class="stat-badge green">{{ stats.projectClicks['freelance-thivagar'] || 0 }} Clicks</span>
           </div>
         </div>
       </article>
     </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 2: LIVE AVAILABILITY & STATUS CONTROLLER (OPTION 2) -->
+    <!-- ========================================== -->
+    <div *ngIf="activeTab === 'availability'" class="tab-content" data-aos="fade-up">
+      <div class="dashboard-grid">
+        <!-- Card: Work Status & Quick Presets -->
+        <article class="dash-card glass-card">
+          <h3 class="card-heading">
+            <i class="fa-solid fa-user-check accent-icon"></i>
+            <span>Work Availability Switch</span>
+          </h3>
+          <p class="card-description">
+            Instantly update your recruiter badges, Hero availability tag, and contact preferences live on the site.
+          </p>
+
+          <!-- Main Toggle Switch -->
+          <div class="toggle-switch-card">
+            <div class="toggle-info">
+              <span class="toggle-title">Open to New Opportunities</span>
+              <span class="toggle-desc">When enabled, your portfolio actively highlights your availability to recruiters.</span>
+            </div>
+            <label class="switch-ui">
+              <input type="checkbox" [(ngModel)]="editConfig.openToWork" (change)="saveAvailability()" />
+              <span class="slider round"></span>
+            </label>
+          </div>
+
+          <!-- Quick Presets -->
+          <div class="preset-section">
+            <span class="preset-label">Quick 1-Click Status Presets:</span>
+            <div class="preset-buttons">
+              <button class="preset-btn" (click)="applyPreset('seeking')">
+                <i class="fa-solid fa-bolt"></i> Actively Looking
+              </button>
+              <button class="preset-btn" (click)="applyPreset('freelance')">
+                <i class="fa-solid fa-briefcase"></i> Open for Freelance
+              </button>
+              <button class="preset-btn" (click)="applyPreset('busy')">
+                <i class="fa-solid fa-shield"></i> Enterprise Delivery Focus
+              </button>
+            </div>
+          </div>
+
+          <!-- Form Fields -->
+          <div class="admin-form-group">
+            <label class="form-label">Hero Badge Eyebrow Text</label>
+            <input
+              type="text"
+              [(ngModel)]="editConfig.availabilityBadgeText"
+              (ngModelChange)="saveAvailability()"
+              class="admin-input"
+              placeholder="e.g. ✦ OPEN TO WORK • FULL STACK & AI" />
+            <small class="form-hint">Displayed at the very top of your homepage hero section.</small>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="form-label">Availability Subtitle</label>
+            <input
+              type="text"
+              [(ngModel)]="editConfig.availabilityStatus"
+              (ngModelChange)="saveAvailability()"
+              class="admin-input"
+              placeholder="e.g. Actively Seeking Opportunities" />
+          </div>
+
+          <button class="btn btn-primary" (click)="saveAvailability()">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>Save Availability Status</span>
+          </button>
+        </article>
+
+        <!-- Card: Work Locations & Preferences -->
+        <article class="dash-card glass-card">
+          <h3 class="card-heading">
+            <i class="fa-solid fa-map-location-dot accent-icon"></i>
+            <span>Target Role & Location Settings</span>
+          </h3>
+          <p class="card-description">
+            Customize the work modes and notice period displayed in your Contact section.
+          </p>
+
+          <div class="admin-form-group">
+            <label class="form-label">Primary Location</label>
+            <input
+              type="text"
+              [(ngModel)]="editConfig.primaryLocation"
+              (ngModelChange)="saveAvailability()"
+              class="admin-input"
+              placeholder="e.g. Bengaluru, India" />
+          </div>
+
+          <div class="admin-form-group">
+            <label class="form-label">Notice Period</label>
+            <select [(ngModel)]="editConfig.noticePeriod" (ngModelChange)="saveAvailability()" class="admin-input">
+              <option value="Immediate to 15 Days">Immediate to 15 Days</option>
+              <option value="Immediate to 30 Days">Immediate to 30 Days</option>
+              <option value="30 Days">30 Days</option>
+              <option value="Flexible Engagement">Flexible Engagement</option>
+              <option value="Not Looking">Not Looking</option>
+            </select>
+          </div>
+
+          <!-- Work Mode Checkboxes -->
+          <div class="admin-form-group">
+            <label class="form-label">Permitted Work Modes (Contact Section)</label>
+            <div class="checkbox-group">
+              <label class="custom-checkbox">
+                <input type="checkbox" [(ngModel)]="editConfig.workModes.remote" (change)="saveAvailability()" />
+                <span>Remote Work</span>
+              </label>
+
+              <label class="custom-checkbox">
+                <input type="checkbox" [(ngModel)]="editConfig.workModes.hybrid" (change)="saveAvailability()" />
+                <span>Hybrid (Bengaluru / Chennai)</span>
+              </label>
+
+              <label class="custom-checkbox">
+                <input type="checkbox" [(ngModel)]="editConfig.workModes.onsite" (change)="saveAvailability()" />
+                <span>Onsite</span>
+              </label>
+            </div>
+          </div>
+
+          <button class="btn btn-primary" (click)="saveAvailability()">
+            <i class="fa-solid fa-check"></i>
+            <span>Update Location & Work Modes</span>
+          </button>
+        </article>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 3: PROJECT & FREELANCE VISIBILITY (OPTION 4) -->
+    <!-- ========================================== -->
+    <div *ngIf="activeTab === 'projects'" class="tab-content" data-aos="fade-up">
+      <div class="dashboard-grid">
+        <!-- Portfolio Projects Visibility Manager -->
+        <article class="dash-card glass-card">
+          <h3 class="card-heading">
+            <i class="fa-solid fa-eye accent-icon"></i>
+            <span>Portfolio Project Visibility</span>
+          </h3>
+          <p class="card-description">
+            Show, hide, or feature specific projects on your live website without deleting any code.
+          </p>
+
+          <!-- Project Row 1: CogniDoc -->
+          <div class="project-manager-item">
+            <div class="p-info">
+              <span class="p-title">CogniDoc — Enterprise Agentic RAG Platform</span>
+              <span class="p-category">Agentic AI & LangGraph</span>
+            </div>
+            <div class="p-controls">
+              <button
+                class="pill-toggle-btn"
+                [class.active]="editConfig.projectFeatured['cognidoc']"
+                (click)="toggleProjectFeatured('cognidoc')"
+                title="Toggle Featured Gold Badge">
+                <i class="fa-solid fa-star"></i> Featured
+              </button>
+              <button
+                class="pill-toggle-btn visibility-btn"
+                [class.active]="editConfig.projectVisibility['cognidoc'] !== false"
+                (click)="toggleProjectVisibility('cognidoc')">
+                <i class="fa-solid" [ngClass]="editConfig.projectVisibility['cognidoc'] !== false ? 'fa-eye' : 'fa-eye-slash'"></i>
+                {{ editConfig.projectVisibility['cognidoc'] !== false ? 'Visible' : 'Hidden' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Project Row 2: Inventory System -->
+          <div class="project-manager-item">
+            <div class="p-info">
+              <span class="p-title">Inventory Management System</span>
+              <span class="p-category">Angular, Spring Boot & MySQL</span>
+            </div>
+            <div class="p-controls">
+              <button
+                class="pill-toggle-btn"
+                [class.active]="editConfig.projectFeatured['inventory-system']"
+                (click)="toggleProjectFeatured('inventory-system')"
+                title="Toggle Featured Gold Badge">
+                <i class="fa-solid fa-star"></i> Featured
+              </button>
+              <button
+                class="pill-toggle-btn visibility-btn"
+                [class.active]="editConfig.projectVisibility['inventory-system'] !== false"
+                (click)="toggleProjectVisibility('inventory-system')">
+                <i class="fa-solid" [ngClass]="editConfig.projectVisibility['inventory-system'] !== false ? 'fa-eye' : 'fa-eye-slash'"></i>
+                {{ editConfig.projectVisibility['inventory-system'] !== false ? 'Visible' : 'Hidden' }}
+              </button>
+            </div>
+          </div>
+
+          <!-- Project Row 3: Personal Portfolio -->
+          <div class="project-manager-item">
+            <div class="p-info">
+              <span class="p-title">Personal Portfolio Website</span>
+              <span class="p-category">Angular 22 & SCSS Architecture</span>
+            </div>
+            <div class="p-controls">
+              <button
+                class="pill-toggle-btn"
+                [class.active]="editConfig.projectFeatured['portfolio']"
+                (click)="toggleProjectFeatured('portfolio')"
+                title="Toggle Featured Gold Badge">
+                <i class="fa-solid fa-star"></i> Featured
+              </button>
+              <button
+                class="pill-toggle-btn visibility-btn"
+                [class.active]="editConfig.projectVisibility['portfolio'] !== false"
+                (click)="toggleProjectVisibility('portfolio')">
+                <i class="fa-solid" [ngClass]="editConfig.projectVisibility['portfolio'] !== false ? 'fa-eye' : 'fa-eye-slash'"></i>
+                {{ editConfig.projectVisibility['portfolio'] !== false ? 'Visible' : 'Hidden' }}
+              </button>
+            </div>
+          </div>
+        </article>
+
+        <!-- Freelance Client Project Manager -->
+        <article class="dash-card glass-card">
+          <h3 class="card-heading">
+            <i class="fa-solid fa-briefcase accent-icon"></i>
+            <span>Freelance Engagement Controls</span>
+          </h3>
+          <p class="card-description">
+            Update the live client project link and engagement status displayed in the Freelancing section.
+          </p>
+
+          <div class="admin-form-group">
+            <label class="form-label">Engagement Status</label>
+            <select [(ngModel)]="editConfig.freelanceStatus" (ngModelChange)="saveFreelanceSettings()" class="admin-input">
+              <option value="Completed">Completed (Production Live)</option>
+              <option value="In Progress">In Progress (Active Sprint)</option>
+              <option value="Active">Active Client</option>
+            </select>
+          </div>
+
+          <div class="admin-form-group">
+            <label class="form-label">Live Project Link (View Project Button)</label>
+            <input
+              type="url"
+              [(ngModel)]="editConfig.freelanceLiveUrl"
+              (ngModelChange)="saveFreelanceSettings()"
+              class="admin-input"
+              placeholder="https://thivagar.vercel.app/" />
+            <small class="form-hint">Points directly to your deployed client deliverable.</small>
+          </div>
+
+          <button class="btn btn-primary" (click)="saveFreelanceSettings()">
+            <i class="fa-solid fa-floppy-disk"></i>
+            <span>Save Freelance Settings</span>
+          </button>
+        </article>
+      </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- TAB 4: RÉSUMÉ & STORAGE -->
+    <!-- ========================================== -->
+    <div *ngIf="activeTab === 'resume'" class="tab-content" data-aos="fade-up">
+      <div class="dashboard-grid">
+        <!-- Card 1: Active Resume Status -->
+        <article class="dash-card status-card glass-card">
+          <div class="card-title-row">
+            <h3 class="card-heading">
+              <i class="fa-solid fa-file-lines accent-icon"></i>
+              <span>Current Active Resume</span>
+            </h3>
+            <span
+              class="status-pill"
+              [class.active]="!resumeState?.isDeleted"
+              [class.deleted]="resumeState?.isDeleted">
+              <span class="status-dot"></span>
+              {{ resumeState?.isDeleted ? 'Deleted / Hidden' : 'Active & Published' }}
+            </span>
+          </div>
+
+          <div class="status-details">
+            <div class="detail-row">
+              <span class="detail-label">File Name:</span>
+              <span class="detail-val file-val">{{ resumeState?.fileName }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Last Updated:</span>
+              <span class="detail-val">{{ resumeState?.uploadDate }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="detail-label">Storage Type:</span>
+              <span class="detail-val">{{ getStorageType() }}</span>
+            </div>
+          </div>
+
+          <div class="status-actions">
+            <button
+              class="btn btn-primary"
+              (click)="downloadCurrent()"
+              [disabled]="resumeState?.isDeleted">
+              <i class="fa-solid fa-download"></i>
+              <span>Preview / Test Download</span>
+            </button>
+
+            <button
+              *ngIf="!resumeState?.isDeleted"
+              class="btn btn-danger delete-btn"
+              (click)="onDeleteResume()">
+              <i class="fa-solid fa-trash-can"></i>
+              <span>Delete Resume</span>
+            </button>
+
+            <button
+              *ngIf="resumeState?.isDeleted"
+              class="btn btn-success restore-quick-btn"
+              (click)="onRestoreDefault()">
+              <i class="fa-solid fa-rotate-left"></i>
+              <span>Reactivate Resume</span>
+            </button>
+          </div>
+        </article>
+
+        <!-- Card 2: Cloud / Drive Link Option -->
+        <article class="dash-card cloud-card glass-card">
+          <h3 class="card-heading">
+            <i class="fa-solid fa-link accent-icon"></i>
+            <span>Direct Public Cloud URL</span>
+          </h3>
+          <p class="card-description">
+            Point directly to a publicly hosted PDF (Google Drive, Dropbox, or custom cloud link).
+          </p>
+
+          <div class="cloud-input-group">
+            <input
+              type="url"
+              [(ngModel)]="cloudUrlInput"
+              placeholder="https://drive.google.com/... or https://..."
+              class="cloud-url-input" />
+            <button class="btn btn-secondary apply-cloud-btn" (click)="onSaveCloudUrl()">
+              <i class="fa-solid fa-check"></i>
+              <span>Set URL</span>
+            </button>
+          </div>
+
+          <div class="restore-actions" style="margin-top: 1rem;">
+            <button class="btn btn-secondary restore-btn" (click)="onRestoreDefault()">
+              <i class="fa-solid fa-arrow-rotate-left"></i>
+              <span>Reset to Default Supabase Storage</span>
+            </button>
+          </div>
+        </article>
+      </div>
+    </div>
+
   </div>
 </section>

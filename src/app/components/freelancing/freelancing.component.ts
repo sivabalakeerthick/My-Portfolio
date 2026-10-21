@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PortfolioConfigService } from '../../services/portfolio-config.service';
 
 export interface LeadershipPillar {
   icon: string;
@@ -41,6 +42,22 @@ export interface FreelanceProject {
   styleUrl: './freelancing.component.scss'
 })
 export class FreelancingComponent {
+  constructor(public configService: PortfolioConfigService) {}
+
+  trackClick(): void {
+    this.configService.trackProjectClick('freelance-thivagar');
+  }
+
+  get projectsList(): FreelanceProject[] {
+    const base = this.freelanceProjects[0];
+    const cfg = this.configService.currentConfig;
+    return [{
+      ...base,
+      status: cfg.freelanceStatus || base.status,
+      link: cfg.freelanceLiveUrl || base.link
+    }];
+  }
+
   freelanceProjects: FreelanceProject[] = [
     {
       id: 'sm-portfolio',
@@ -52,7 +69,7 @@ export class FreelancingComponent {
       timeline: '2026',
       status: 'Completed',
       category: 'Custom Web Application & CMS',
-      link: 'https://github.com/sivabalakeerthick/website',
+      link: 'https://thivagar.vercel.app/',
       githubUrl: 'https://github.com/sivabalakeerthick/website',
       overview:
         'Designed and developed a custom website for an architect to showcase design portfolios, project drawings, and 3D renderings to prospective clients. Handled the entire project end-to-end — from understanding the client’s vision to designing the user interface, building an interactive presentation reader, and creating an easy-to-use admin dashboard so the client can update their portfolio without writing code.',

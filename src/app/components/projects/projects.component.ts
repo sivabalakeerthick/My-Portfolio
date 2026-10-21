@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { PortfolioConfigService } from '../../services/portfolio-config.service';
 
 export interface Project {
+  id: string;
   title: string;
   link: string;
   description: string;
   techStack: string[];
-  category: 'fullstack' | 'ai' | 'bi';
+  category: 'fullstack' | 'ai';
   categoryLabel: string;
   githubUrl?: string;
   demoUrl?: string;
@@ -21,10 +23,13 @@ export interface Project {
   styleUrl: './projects.component.scss'
 })
 export class ProjectsComponent {
-  selectedFilter: 'all' | 'fullstack' | 'ai' | 'bi' = 'all';
+  selectedFilter: 'all' | 'fullstack' | 'ai' = 'all';
+
+  constructor(public configService: PortfolioConfigService) {}
 
   projects: Project[] = [
     {
+      id: 'cognidoc',
       title: 'CogniDoc — Enterprise Agentic RAG Platform',
       description:
         'A production-grade, budget-aware multi-microservice Agentic RAG platform engineered with LangGraph, FastAPI, ChromaDB, and Angular 22. Integrates Google Gemini, Groq, and Claude APIs with hybrid dense vector + BM25 sparse retrieval, Auth0 authentication, self-correcting reflection loops, local document grading, citation verification, and comprehensive evaluation metrics (F1 score, Precision, Recall, LLM-as-a-judge).',
@@ -46,6 +51,7 @@ export class ProjectsComponent {
       featured: true
     },
     {
+      id: 'inventory-system',
       title: 'Inventory Management System',
       description:
         'A secure, production-grade inventory management platform engineered with Angular and Spring Boot. Implemented JWT authentication, role-based access control, MySQL data persistence, and comprehensive RESTful API integrations.',
@@ -65,6 +71,7 @@ export class ProjectsComponent {
       featured: true
     },
     {
+      id: 'portfolio',
       title: 'Personal Portfolio Website',
       description:
         'High-performance developer portfolio built with Angular 22, TypeScript, and modern SCSS architecture. Integrated automated CI/CD deployment pipelines via GitHub Actions and Firebase cloud hosting.',
@@ -74,44 +81,38 @@ export class ProjectsComponent {
       category: 'fullstack',
       categoryLabel: 'Modern Web Engineering',
       featured: true
-    },
-    {
-      title: 'Brain Tumour Prediction CNN',
-      description:
-        'A deep Convolutional Neural Network (CNN) built with Python and data science frameworks to detect brain tumours from MRI scans. Features high classification accuracy for automated early clinical diagnostics assistance.',
-      techStack: ['Python', 'CNN Deep Learning', 'Pandas', 'NumPy', 'Matplotlib'],
-      link: 'https://www.kaggle.com/code/sivabalakeerthickg/cnn-brain/notebook',
-      demoUrl: 'https://www.kaggle.com/code/sivabalakeerthickg/cnn-brain/notebook',
-      category: 'ai',
-      categoryLabel: 'AI & Deep Learning',
-      featured: false
-    },
-    {
-      title: 'Bank Customer Insights Dashboard',
-      description:
-        'Interactive business intelligence dashboard built in Power BI to analyze bank customer demographics, transaction patterns, and churn risk. Delivers automated visual analytics for executive decision-making.',
-      techStack: ['Power BI Desktop', 'Data Analytics', 'Interactive DAX', 'Visualization'],
-      link: 'https://github.com/sivabalakeerthick/Bank-Customer-Insights-Dashboard',
-      githubUrl: 'https://github.com/sivabalakeerthick/Bank-Customer-Insights-Dashboard',
-      category: 'bi',
-      categoryLabel: 'Business Intelligence',
-      featured: false
     }
   ];
 
-  get filteredProjects(): Project[] {
-    if (this.selectedFilter === 'all') {
-      return this.projects;
-    }
-    return this.projects.filter(p => p.category === this.selectedFilter);
+  get visibleProjects(): Project[] {
+    const visibility = this.configService.currentConfig.projectVisibility || {};
+    const featuredMap = this.configService.currentConfig.projectFeatured || {};
+
+    return this.projects
+      .filter(p => visibility[p.id] !== false)
+      .map(p => ({
+        ...p,
+        featured: featuredMap[p.id] !== undefined ? featuredMap[p.id] : p.featured
+      }));
   }
 
-  setFilter(filter: 'all' | 'fullstack' | 'ai' | 'bi'): void {
+  get filteredProjects(): Project[] {
+    if (this.selectedFilter === 'all') {
+      return this.visibleProjects;
+    }
+    return this.visibleProjects.filter(p => p.category === this.selectedFilter);
+  }
+
+  setFilter(filter: 'all' | 'fullstack' | 'ai'): void {
     this.selectedFilter = filter;
   }
 
-  onFilterKeydown(event: KeyboardEvent, currentFilter: 'all' | 'fullstack' | 'ai' | 'bi'): void {
-    const filters: Array<'all' | 'fullstack' | 'ai' | 'bi'> = ['all', 'fullstack', 'ai', 'bi'];
+  trackProjectClick(projectId: string): void {
+    this.configService.trackProjectClick(projectId);
+  }
+
+  onFilterKeydown(event: KeyboardEvent, currentFilter: 'all' | 'fullstack' | 'ai'): void {
+    const filters: Array<'all' | 'fullstack' | 'ai'> = ['all', 'fullstack', 'ai'];
     const currentIndex = filters.indexOf(currentFilter);
     const direction = event.key === 'ArrowRight' || event.key === 'ArrowDown' ? 1 : event.key === 'ArrowLeft' || event.key === 'ArrowUp' ? -1 : 0;
 
@@ -125,15 +126,17 @@ export class ProjectsComponent {
   currentIndex = 0;
 
   get currentProject(): Project {
-    return this.projects[this.currentIndex];
+    return this.filteredProjects[this.currentIndex] || this.filteredProjects[0];
   }
 
   nextProject(): void {
-    this.currentIndex = (this.currentIndex + 1) % this.projects.length;
+    if (this.filteredProjects.length === 0) return;
+    this.currentIndex = (this.currentIndex + 1) % this.filteredProjects.length;
   }
 
   prevProject(): void {
-    this.currentIndex = (this.currentIndex - 1 + this.projects.length) % this.projects.length;
+    if (this.filteredProjects.length === 0) return;
+    this.currentIndex = (this.currentIndex - 1 + this.filteredProjects.length) % this.filteredProjects.length;
   }
 
   goTo(index: number): void {

@@ -14,6 +14,7 @@ const EMAILJS_SERVICE_ID = process.env.EMAILJS_SERVICE_ID || 'service_d6t9wbc';
 const EMAILJS_TEMPLATE_ID = process.env.EMAILJS_TEMPLATE_ID || 'template_dxadctr';
 const EMAILJS_REPLY_TEMPLATE_ID = process.env.EMAILJS_REPLY_TEMPLATE_ID || 'template_ubvp7hi';
 const EMAILJS_PUBLIC_KEY = process.env.EMAILJS_PUBLIC_KEY || 'sSOqcsUjoDSeZJZ8-';
+const EMAILJS_PRIVATE_KEY = process.env.EMAILJS_PRIVATE_KEY || '';
 
 // 1. CORS Configuration
 const allowedOrigins = (process.env.ALLOWED_ORIGINS || 'http://localhost:4200')
@@ -82,11 +83,21 @@ setInterval(() => {
 // ==========================================
 
 // Health Check
+app.get('/', (req, res) => {
+  res.json({
+    status: 'ok',
+    service: 'portfolio-backend',
+    uptime: process.uptime(),
+    timestamp: new Date().toISOString(),
+  });
+});
+
 app.get('/api/health', (req, res) => {
   res.json({
     status: 'ok',
     service: 'portfolio-backend',
     emailEngine: 'EmailJS REST API',
+    uptime: process.uptime(),
     timestamp: new Date().toISOString(),
   });
 });
@@ -184,10 +195,12 @@ app.post('/api/contact', contactRateLimiter, async (req, res) => {
     const isPriority = importance === 'high';
 
     // 3. Dispatch Notification via EmailJS Server API
+    const originHeader = req.headers.origin || 'https://sivabalakeerthick.web.app';
     const emailPayload = {
       service_id: EMAILJS_SERVICE_ID,
       template_id: EMAILJS_TEMPLATE_ID,
       user_id: EMAILJS_PUBLIC_KEY,
+      ...(EMAILJS_PRIVATE_KEY ? { accessToken: EMAILJS_PRIVATE_KEY } : {}),
       template_params: {
         name: cleanName,
         email: cleanEmail,
@@ -203,6 +216,7 @@ app.post('/api/contact', contactRateLimiter, async (req, res) => {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
+        'Origin': originHeader,
       },
       body: JSON.stringify(emailPayload),
     });
@@ -217,11 +231,15 @@ app.post('/api/contact', contactRateLimiter, async (req, res) => {
     if (EMAILJS_REPLY_TEMPLATE_ID) {
       fetch('https://api.emailjs.com/api/v1.0/email/send', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'Origin': originHeader,
+        },
         body: JSON.stringify({
           service_id: EMAILJS_SERVICE_ID,
           template_id: EMAILJS_REPLY_TEMPLATE_ID,
           user_id: EMAILJS_PUBLIC_KEY,
+          ...(EMAILJS_PRIVATE_KEY ? { accessToken: EMAILJS_PRIVATE_KEY } : {}),
           template_params: {
             name: cleanName,
             email: cleanEmail,

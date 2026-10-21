@@ -15,22 +15,6 @@
         Whether you're looking for a dedicated Full Stack Engineer, need consultation on Agentic RAG architecture, or want to commission freelance client systems — let's connect.
       </p>
 
-      <!-- 1-Click Copy Email Card -->
-      <div class="email-copy-card glass-card">
-        <div class="email-details">
-          <span class="email-label">Direct Email</span>
-          <span class="email-value">{{ emailAddress }}</span>
-        </div>
-        <button
-          class="copy-email-btn"
-          (click)="copyEmail()"
-          [attr.aria-label]="copiedEmail ? 'Email copied' : 'Copy email to clipboard'"
-          [title]="copiedEmail ? 'Copied to clipboard!' : 'Copy Email'">
-          <i class="fa-solid" [ngClass]="copiedEmail ? 'fa-check' : 'fa-copy'" aria-hidden="true"></i>
-          <span>{{ copiedEmail ? 'Copied!' : 'Copy' }}</span>
-        </button>
-      </div>
-
       <!-- Live Location & Preferences Widget -->
       <div class="location-widget glass-card">
         <!-- Current Location & Local Time -->
@@ -39,7 +23,7 @@
             <i class="fa-solid fa-location-dot accent-icon" aria-hidden="true"></i>
             <div>
               <span class="widget-label">Current Location</span>
-              <span class="widget-value">Bengaluru, India</span>
+              <span class="widget-value">{{ configService.currentConfig.primaryLocation }}</span>
             </div>
           </div>
           <div class="widget-item">
@@ -47,6 +31,13 @@
             <div>
               <span class="widget-label">Local Time (IST)</span>
               <span class="widget-value">{{ localTime }}</span>
+            </div>
+          </div>
+          <div class="widget-item">
+            <i class="fa-solid fa-hourglass-half accent-icon" aria-hidden="true"></i>
+            <div>
+              <span class="widget-label">Notice Period</span>
+              <span class="widget-value">{{ configService.currentConfig.noticePeriod }}</span>
             </div>
           </div>
         </div>
@@ -84,15 +75,15 @@
             <span class="widget-label">Work Modes</span>
           </div>
           <div class="work-preference-chips">
-            <span class="work-chip mode-chip">
+            <span *ngIf="configService.currentConfig.workModes.remote" class="work-chip mode-chip">
               <i class="fa-solid fa-house-laptop" aria-hidden="true"></i>
               <span>Remote</span>
             </span>
-            <span class="work-chip mode-chip">
+            <span *ngIf="configService.currentConfig.workModes.hybrid" class="work-chip mode-chip">
               <i class="fa-solid fa-people-arrows" aria-hidden="true"></i>
               <span>Hybrid</span>
             </span>
-            <span class="work-chip mode-chip">
+            <span *ngIf="configService.currentConfig.workModes.onsite" class="work-chip mode-chip">
               <i class="fa-solid fa-briefcase" aria-hidden="true"></i>
               <span>Onsite</span>
             </span>
@@ -256,14 +247,19 @@
         <button
           type="submit"
           class="btn btn-primary submit-btn"
-          [disabled]="isSubmitting">
-          <span *ngIf="!isSubmitting">
+          [class.btn-sent]="justSent"
+          [disabled]="isSubmitting || justSent">
+          <span *ngIf="!isSubmitting && !justSent">
             <span>{{ contactForm.value.importance === 'high' ? 'Dispatch High Priority Message' : 'Send Message' }}</span>
             <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
           </span>
           <span *ngIf="isSubmitting" class="submitting-state">
             <i class="fa-solid fa-circle-notch fa-spin" aria-hidden="true"></i>
-            <span>Transmitting...</span>
+            <span>Sending message...</span>
+          </span>
+          <span *ngIf="justSent && !isSubmitting" class="sent-state">
+            <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+            <span>Message Sent!</span>
           </span>
         </button>
 
@@ -273,33 +269,8 @@
         </div>
 
         <div *ngIf="errorMessage" class="alert-error" role="alert">
-          <div class="alert-error-header">
-            <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
-            <span>{{ errorMessage }}</span>
-          </div>
-          <div *ngIf="mailtoFallbackUrl" class="fallback-action">
-            <a
-              *ngIf="gmailWebUrl"
-              [href]="gmailWebUrl"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn btn-primary fallback-btn gmail-btn">
-              <i class="fa-solid fa-envelope-open-text" aria-hidden="true"></i>
-              <span>Open & Send via Gmail Web</span>
-            </a>
-            <a [href]="mailtoFallbackUrl" class="btn btn-secondary fallback-btn email-app-btn">
-              <i class="fa-solid fa-paper-plane" aria-hidden="true"></i>
-              <span>Send via Default Email App</span>
-            </a>
-            <a
-              [href]="whatsappLink"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn btn-secondary whatsapp-fallback-btn">
-              <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
-              <span>Message on WhatsApp</span>
-            </a>
-          </div>
+          <i class="fa-solid fa-circle-exclamation" aria-hidden="true"></i>
+          <span>{{ errorMessage }}</span>
         </div>
       </form>
     </div>

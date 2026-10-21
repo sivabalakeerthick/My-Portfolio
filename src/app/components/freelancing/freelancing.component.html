@@ -13,7 +13,7 @@
   <div class="freelance-container" data-aos="fade-up" data-aos-delay="100">
     <!-- Freelance Project Cards Loop -->
     <article
-      *ngFor="let project of freelanceProjects; let i = index"
+      *ngFor="let project of projectsList; let i = index"
       class="freelance-card glass-card"
       [attr.aria-label]="project.title">
       <div class="card-accent-bar"></div>
@@ -61,6 +61,7 @@
             [href]="project.link"
             target="_blank"
             rel="noopener noreferrer"
+            (click)="trackClick()"
             class="btn btn-primary freelance-btn"
             [attr.aria-label]="'View live project: ' + project.title">
             <span>View Project</span>
