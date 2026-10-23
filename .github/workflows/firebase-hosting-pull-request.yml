@@ -37,3 +37,4 @@ jobs:
           target: sivabalakeerthick
           channelId: pr-${{ github.event.pull_request.number }}
           expires: 7d
+          firebaseToolsVersion: "15.34.0"

@@ -37,3 +37,4 @@ jobs:
           channelId: live
           target: sivabalakeerthick
           projectId: portfolio-sivabalakeerthick
+          firebaseToolsVersion: "15.34.0"
