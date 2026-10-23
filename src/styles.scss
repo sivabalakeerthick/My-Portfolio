@@ -105,10 +105,18 @@ body.dark-mode {
   padding: 0;
 }
 
+img, svg, video, canvas, iframe {
+  max-width: 100%;
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 90px;
   text-size-adjust: 100%;
+  -webkit-text-size-adjust: 100%;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
 }
 
 body {
@@ -117,6 +125,8 @@ body {
   color: var(--text-main);
   line-height: 1.6;
   min-height: 100vh;
+  width: 100%;
+  max-width: 100%;
   overflow-x: hidden;
   transition: background-color 0.4s ease, color 0.4s ease;
   position: relative;
@@ -356,10 +366,9 @@ body:not(.dark-mode) .gradient-text {
 // ==========================================================================
 #ambient-canvas {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  inset: 0;
+  width: 100%;
+  height: 100%;
   pointer-events: none;
   z-index: 0;
   opacity: 0.55;
@@ -372,6 +381,36 @@ body.dark-mode #ambient-canvas {
 main {
   position: relative;
   z-index: 1;
+  width: 100%;
+  max-width: 100%;
+  overflow-x: hidden;
+}
+
+// Ensure modals sit on top of the fixed navbar dock and body scroll is locked
+body.modal-open,
+body:has(.modal-backdrop) {
+  overflow: hidden !important;
+
+  main {
+    z-index: 10005 !important;
+  }
+
+  .navbar-dock,
+  .mobile-menu-btn,
+  .mobile-drawer-overlay,
+  .mobile-drawer {
+    z-index: 10 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+    transition: opacity 0.2s ease, visibility 0.2s ease;
+  }
+
+  .scroll-to-top {
+    z-index: 10 !important;
+    opacity: 0 !important;
+    pointer-events: none !important;
+  }
 }
 
 @keyframes buttonSpin {

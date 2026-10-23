@@ -2,11 +2,6 @@
   <div class="hero-container">
     <!-- Left Column: Introduction & CTAs -->
     <div class="hero-intro" data-aos="fade-up" data-aos-duration="600">
-      <div class="hero-eyebrow" [class.busy]="!configService.currentConfig.openToWork">
-        <span class="sparkle">✦</span>
-        <span>{{ configService.currentConfig.availabilityBadgeText }}</span>
-      </div>
-
       <h1 class="hero-title">
         Building scalable digital experiences with <span class="gradient-text">precision</span>.
       </h1>
@@ -22,23 +17,23 @@
       </p>
 
       <div class="hero-actions">
-        <a href="#projects" class="btn btn-primary">
+        <a href="#freelancing" class="btn btn-primary">
           <span>Explore Projects</span>
           <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
         </a>
         <a href="#contact" class="btn btn-secondary">
           <span>Get In Touch</span>
         </a>
-        <a
-          [href]="resumeService.getDownloadUrl()"
-          [download]="resumeService.getFileName()"
-          (click)="onDownloadResume($event)"
+        <button
+          type="button"
+          (click)="openResumeModal()"
           class="btn btn-secondary resume-btn"
           [class.disabled-btn]="!resumeService.isAvailable()"
-          [attr.title]="resumeService.isAvailable() ? 'Download Résumé' : 'Resume currently updating'">
-          <i class="fa-solid fa-file-arrow-down" aria-hidden="true"></i>
+          [attr.title]="resumeService.isAvailable() ? 'View and Download Résumé' : 'Resume currently updating'"
+          aria-label="View and Download Résumé">
+          <i class="fa-regular fa-file-lines" aria-hidden="true"></i>
           <span>Résumé</span>
-        </a>
+        </button>
       </div>
 
       <!-- Quick Metrics -->
@@ -118,6 +113,88 @@
             <span>TypeScript 6.0.3 • Angular 22</span>
           </div>
           <span class="location-tag">📍 Bengaluru, India</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- In-App Résumé Preview Modal -->
+  <div
+    class="modal-backdrop"
+    *ngIf="isResumeModalOpen"
+    (click)="closeResumeModal()"
+    role="presentation">
+    <div
+      class="resume-modal-dialog glass-card"
+      (click)="$event.stopPropagation()"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="resume-modal-title">
+
+      <!-- Modal Header -->
+      <div class="resume-modal-header">
+        <div class="resume-title-group">
+          <div class="resume-icon-badge" aria-hidden="true">
+            <i class="fa-solid fa-file-pdf"></i>
+          </div>
+          <div>
+            <h3 id="resume-modal-title" class="resume-modal-title">Siva Bala Keerthick G</h3>
+            <p class="resume-modal-subtitle">Full Stack Software Engineer &bull; Curriculum Vitae</p>
+          </div>
+        </div>
+
+        <div class="resume-modal-actions">
+          <a
+            [href]="resumeService.getDownloadUrl()"
+            [download]="resumeService.getFileName()"
+            (click)="onDownloadResume($event)"
+            class="resume-action-btn primary"
+            title="Download PDF to your device">
+            <i class="fa-solid fa-download" aria-hidden="true"></i>
+            <span>Download</span>
+          </a>
+
+          <a
+            [href]="resumeViewUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="resume-action-btn secondary"
+            title="Open full PDF in a new browser tab">
+            <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+            <span>Open in Tab</span>
+          </a>
+
+          <button
+            type="button"
+            class="modal-close-btn"
+            (click)="closeResumeModal()"
+            aria-label="Close résumé preview">
+            <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- Modal Body (Embedded Responsive PDF Viewer) -->
+      <div class="resume-modal-body">
+        <iframe
+          *ngIf="safeResumeUrl"
+          [src]="safeResumeUrl"
+          class="resume-frame"
+          title="Siva Bala Keerthick Résumé PDF Preview"
+          loading="lazy">
+        </iframe>
+
+        <!-- Fallback notice for devices that cannot embed PDFs -->
+        <div class="resume-fallback-bar">
+          <span>Trouble viewing the document?</span>
+          <div class="fallback-links">
+            <a [href]="resumeViewUrl" target="_blank" rel="noopener noreferrer">
+              <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i> Open in New Tab
+            </a>
+            <a [href]="resumeService.getDownloadUrl()" [download]="resumeService.getFileName()" (click)="onDownloadResume($event)">
+              <i class="fa-solid fa-download" aria-hidden="true"></i> Download PDF
+            </a>
+          </div>
         </div>
       </div>
     </div>

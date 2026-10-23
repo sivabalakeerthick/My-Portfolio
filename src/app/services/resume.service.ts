@@ -18,8 +18,8 @@ export class ResumeService {
   private readonly STORAGE_KEY = 'sbk_portfolio_resume_meta';
   private readonly DEFAULT_RESUME_URL =
     environment.resumeUrl ||
-    'https://bfglwjigodygccsugmtu.supabase.co/storage/v1/object/public/resume/Experience%20Resume.pdf?download=Siva_Bala_Keerthick_Resume.pdf';
-  private readonly DEFAULT_FILE_NAME = environment.resumeFileName || 'Siva_Bala_Keerthick_Resume.pdf';
+    'https://bfglwjigodygccsugmtu.supabase.co/storage/v1/object/public/resume/Siva%20Bala%20Keerthick%20G_Resume.pdf';
+  private readonly DEFAULT_FILE_NAME = environment.resumeFileName || 'Siva_Bala_Keerthick_G_Resume.pdf';
 
   private resumeStateSubject = new BehaviorSubject<ResumeMetadata>(this.loadInitialState());
   public resumeState$: Observable<ResumeMetadata> = this.resumeStateSubject.asObservable();
@@ -35,7 +35,7 @@ export class ResumeService {
         if (saved) {
           const parsed = JSON.parse(saved);
           // If previous cache references bundled asset, upgrade to live Supabase URL
-          if (parsed && (!parsed.url || parsed.url === 'assets/Resume.pdf')) {
+          if (parsed && (!parsed.url || parsed.url === 'assets/Resume.pdf' || parsed.url.includes('Experience%20Resume.pdf'))) {
             parsed.url = this.DEFAULT_RESUME_URL;
             parsed.uploadDate = 'Supabase Cloud Storage';
           }
@@ -65,7 +65,17 @@ export class ResumeService {
   }
 
   public getDownloadUrl(): string {
-    return this.currentState.url || this.DEFAULT_RESUME_URL;
+    const rawUrl = this.currentState.url || this.DEFAULT_RESUME_URL;
+    if (rawUrl.includes('download=')) {
+      return rawUrl;
+    }
+    const separator = rawUrl.includes('?') ? '&' : '?';
+    return `${rawUrl}${separator}download=${encodeURIComponent(this.getFileName())}`;
+  }
+
+  public getViewUrl(): string {
+    const rawUrl = this.currentState.url || this.DEFAULT_RESUME_URL;
+    return rawUrl.replace(/(\?|&)download=[^&]*/, '').replace(/\?$/, '');
   }
 
   public getFileName(): string {

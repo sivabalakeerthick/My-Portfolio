@@ -60,7 +60,6 @@ export class ContactComponent implements OnInit, OnDestroy {
 
   copiedEmail = false;
   readonly emailAddress = 'sivabalakeerthick@gmail.com';
-  readonly instagramUrl = 'https://instagram.com/sivabalakeerthick';
   readonly chessComUrl = 'https://www.chess.com/member/sivabalakerthick';
 
   // Configurable WhatsApp ID / Username for Number Privacy

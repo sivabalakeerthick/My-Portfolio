@@ -9,7 +9,7 @@
       A collection of end-to-end full stack applications, enterprise Agentic RAG platforms, and production software systems.
     </p>
 
-    <!-- Filter Pills -->
+    <!-- Category Filter Pills -->
     <div class="filter-bar" role="tablist" aria-label="Project categories">
       <button
         class="filter-btn"
@@ -20,21 +20,9 @@
         role="tab"
         [attr.aria-selected]="selectedFilter === 'all'"
         aria-controls="project-results">
-        <i class="fa-solid fa-layer-group filter-icon" aria-hidden="true"></i>
-        <span>All Projects</span>
+        <i class="fa-solid fa-shapes filter-icon" aria-hidden="true"></i>
+        <span>All</span>
         <span class="count">{{ visibleProjects.length }}</span>
-      </button>
-      <button
-        class="filter-btn"
-        [class.active]="selectedFilter === 'fullstack'"
-        (click)="setFilter('fullstack')"
-        (keydown)="onFilterKeydown($event, 'fullstack')"
-        id="project-filter-fullstack"
-        role="tab"
-        [attr.aria-selected]="selectedFilter === 'fullstack'"
-        aria-controls="project-results">
-        <i class="fa-solid fa-code filter-icon" aria-hidden="true"></i>
-        <span>Full Stack</span>
       </button>
       <button
         class="filter-btn"
@@ -48,11 +36,29 @@
         <i class="fa-solid fa-brain filter-icon" aria-hidden="true"></i>
         <span>AI & Agentic RAG</span>
       </button>
+      <button
+        class="filter-btn"
+        [class.active]="selectedFilter === 'fullstack'"
+        (click)="setFilter('fullstack')"
+        (keydown)="onFilterKeydown($event, 'fullstack')"
+        id="project-filter-fullstack"
+        role="tab"
+        [attr.aria-selected]="selectedFilter === 'fullstack'"
+        aria-controls="project-results">
+        <i class="fa-solid fa-code filter-icon" aria-hidden="true"></i>
+        <span>Full Stack</span>
+      </button>
     </div>
   </div>
 
-  <!-- Projects Grid -->
-  <div id="project-results" class="projects-grid" role="tabpanel" [attr.aria-labelledby]="'project-filter-' + selectedFilter" data-aos="fade-up" data-aos-delay="100">
+  <!-- LARGER DEVICES: Compact 3-Column Cards Grid -->
+  <div
+    id="project-results"
+    class="projects-grid desktop-view"
+    role="tabpanel"
+    [attr.aria-labelledby]="'project-filter-' + selectedFilter"
+    data-aos="fade-up"
+    data-aos-delay="100">
     <article
       *ngFor="let project of filteredProjects; let i = index"
       class="project-card glass-card"
@@ -76,18 +82,36 @@
           </a>
         </h3>
 
-        <p class="project-description">{{ project.description }}</p>
+        <p class="project-description">{{ project.shortDescription || project.description }}</p>
 
+        <!-- Compact Tech Stack with +X more pill -->
         <div class="tech-stack">
           <div class="tech-chips">
-            <span *ngFor="let tech of project.techStack" class="tech-chip">
+            <span *ngFor="let tech of project.techStack.slice(0, 4)" class="tech-chip">
               {{ tech }}
             </span>
+            <button
+              *ngIf="project.techStack.length > 4"
+              type="button"
+              class="tech-chip-more"
+              (click)="openModal(project)"
+              [attr.aria-label]="'View all ' + project.techStack.length + ' technologies for ' + project.title">
+              +{{ project.techStack.length - 4 }} more
+            </button>
           </div>
         </div>
       </div>
 
       <div class="card-actions">
+        <button
+          type="button"
+          class="project-btn modal-trigger-btn"
+          (click)="openModal(project)"
+          [attr.aria-label]="'View architecture & case study for ' + project.title">
+          <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+          <span>Architecture & Details</span>
+        </button>
+
         <a
           *ngIf="project.githubUrl"
           [href]="project.githubUrl"
@@ -107,10 +131,228 @@
           (click)="trackProjectClick(project.id)"
           class="project-btn demo-btn"
           [attr.aria-label]="'Live link for ' + project.title">
-          <span>View Project</span>
+          <span>Live Demo</span>
           <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
         </a>
       </div>
     </article>
+  </div>
+
+  <!-- MOBILES (<= 768px): Sleek, Polished Compact Cards -->
+  <div
+    class="projects-list-wrap mobile-only-view"
+    role="tabpanel"
+    [attr.aria-labelledby]="'project-filter-' + selectedFilter"
+    data-aos="fade-up"
+    data-aos-delay="100">
+    <article
+      *ngFor="let project of filteredProjects"
+      class="project-list-row glass-card"
+      (click)="openModal(project)">
+      
+      <!-- Top Row: Category Pill & Quick Links -->
+      <div class="list-card-top">
+        <div class="category-indicator">
+          <span class="category-icon-badge" [class.ai-category]="project.category === 'ai'">
+            <i [class]="project.category === 'ai' ? 'fa-solid fa-brain' : 'fa-solid fa-code'" aria-hidden="true"></i>
+          </span>
+          <span class="category-pill mini-pill">{{ project.categoryLabel }}</span>
+        </div>
+
+        <div class="top-quick-actions" (click)="$event.stopPropagation()">
+          <a
+            *ngIf="project.githubUrl"
+            [href]="project.githubUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            (click)="trackProjectClick(project.id)"
+            class="quick-action-icon"
+            [attr.aria-label]="'GitHub code for ' + project.title"
+            title="Source Code">
+            <i class="fa-brands fa-github" aria-hidden="true"></i>
+          </a>
+          <a
+            [href]="project.link"
+            target="_blank"
+            rel="noopener noreferrer"
+            (click)="trackProjectClick(project.id)"
+            class="quick-action-icon primary"
+            [attr.aria-label]="'Live project for ' + project.title"
+            title="Live Demo">
+            <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- Main Info: Title & Subtitle -->
+      <div class="list-card-main">
+        <h3 class="list-title">{{ project.title }}</h3>
+        <p class="list-subtitle">{{ project.subtitle || project.shortDescription }}</p>
+      </div>
+
+      <!-- Tech Stack Chips -->
+      <div class="list-tech-chips">
+        <span *ngFor="let tech of project.techStack.slice(0, 3)" class="tech-chip mini">
+          {{ tech }}
+        </span>
+        <span *ngIf="project.techStack.length > 3" class="tech-chip-more mini">
+          +{{ project.techStack.length - 3 }} more
+        </span>
+      </div>
+
+      <!-- Full-Width Architecture & Details CTA Bar -->
+      <div class="list-card-cta">
+        <div class="cta-inner">
+          <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+          <span>Architecture & Details</span>
+        </div>
+        <i class="fa-solid fa-arrow-right cta-arrow" aria-hidden="true"></i>
+      </div>
+    </article>
+  </div>
+
+  <!-- ==============================================================
+       CASE STUDY & ARCHITECTURE MODAL
+       ============================================================== -->
+  <div
+    *ngIf="isModalOpen && activeModalProject"
+    class="modal-backdrop"
+    (click)="closeModal()"
+    role="presentation">
+    <div
+      class="modal-dialog glass-card"
+      (click)="$event.stopPropagation()"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="'modal-title-' + activeModalProject.id">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div class="modal-header-info">
+          <div class="modal-meta-row">
+            <span class="category-pill">{{ activeModalProject.categoryLabel }}</span>
+            <span *ngIf="activeModalProject.featured" class="status-badge featured">
+              <span class="status-dot"></span>
+              Featured Project
+            </span>
+          </div>
+          <h3 [id]="'modal-title-' + activeModalProject.id" class="modal-title">
+            {{ activeModalProject.title }}
+          </h3>
+          <p *ngIf="activeModalProject.subtitle" class="modal-subtitle">{{ activeModalProject.subtitle }}</p>
+        </div>
+
+        <button
+          type="button"
+          class="modal-close-btn"
+          (click)="closeModal()"
+          aria-label="Close Case Study">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <!-- Modal Scrollable Content Body -->
+      <div class="modal-body custom-scrollbar">
+        <!-- Key Metrics & Benchmark Stats -->
+        <div *ngIf="activeModalProject.metrics && activeModalProject.metrics.length > 0" class="modal-metrics-grid">
+          <div *ngFor="let metric of activeModalProject.metrics" class="modal-metric-card">
+            <span class="metric-value">{{ metric.value }}</span>
+            <span class="metric-label">{{ metric.label }}</span>
+          </div>
+        </div>
+
+        <!-- Section 1: Overview & System Architecture -->
+        <div class="modal-section">
+          <h4 class="section-subheading">
+            <i class="fa-solid fa-diagram-project" aria-hidden="true"></i>
+            System Overview & Architecture
+          </h4>
+          <p class="modal-overview-text">{{ activeModalProject.description }}</p>
+        </div>
+
+        <!-- Section 2: Core Engineering Highlights -->
+        <div *ngIf="activeModalProject.highlights && activeModalProject.highlights.length > 0" class="modal-section">
+          <h4 class="section-subheading">
+            <i class="fa-solid fa-compass" aria-hidden="true"></i>
+            Key Engineering Highlights
+          </h4>
+
+          <div class="highlights-grid">
+            <div *ngFor="let item of activeModalProject.highlights" class="highlight-card">
+              <div class="highlight-icon-wrap">
+                <i [class]="item.icon" aria-hidden="true"></i>
+              </div>
+              <div class="highlight-body">
+                <h5 class="highlight-name">{{ item.title }}</h5>
+                <p class="highlight-desc">{{ item.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: Key Capabilities & Deliverables -->
+        <div *ngIf="activeModalProject.capabilities && activeModalProject.capabilities.length > 0" class="modal-section">
+          <h4 class="section-subheading">
+            <i class="fa-solid fa-list-check" aria-hidden="true"></i>
+            Key Capabilities & Deliverables
+          </h4>
+          <div class="capabilities-grid">
+            <div *ngFor="let cap of activeModalProject.capabilities" class="capability-item">
+              <i class="fa-solid fa-circle-check capability-check" aria-hidden="true"></i>
+              <span>{{ cap }}</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 4: Architecture & Tech Stack -->
+        <div class="modal-section">
+          <h4 class="section-subheading">
+            <i class="fa-solid fa-code" aria-hidden="true"></i>
+            Complete Tech Stack & Infrastructure
+          </h4>
+          <div class="modal-tech-card">
+            <div class="tech-chips">
+              <span *ngFor="let tech of activeModalProject.techStack" class="tech-chip">
+                {{ tech }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer Actions -->
+      <div class="modal-footer">
+        <div class="modal-footer-links">
+          <a
+            *ngIf="activeModalProject.githubUrl"
+            [href]="activeModalProject.githubUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-secondary project-footer-btn"
+            [attr.aria-label]="'View source code for ' + activeModalProject.title">
+            <i class="fa-brands fa-github" aria-hidden="true"></i>
+            <span>Source Code</span>
+          </a>
+
+          <a
+            [href]="activeModalProject.link"
+            target="_blank"
+            rel="noopener noreferrer"
+            (click)="trackProjectClick(activeModalProject.id)"
+            class="btn btn-primary project-footer-btn"
+            [attr.aria-label]="'View live project for ' + activeModalProject.title">
+            <span>View Live Project</span>
+            <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+          </a>
+        </div>
+        <button
+          type="button"
+          class="btn btn-secondary modal-close-action"
+          (click)="closeModal()">
+          <span>Close</span>
+        </button>
+      </div>
+
+    </div>
   </div>
 </section>

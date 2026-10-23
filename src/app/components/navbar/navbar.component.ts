@@ -70,6 +70,13 @@ export class NavbarComponent implements OnInit, OnDestroy {
     this.isMobileMenuOpen = false;
   }
 
+  @HostListener('window:keydown.escape')
+  onEscape(): void {
+    if (this.isMobileMenuOpen) {
+      this.closeMobileMenu();
+    }
+  }
+
   private applyTheme(): void {
     if (typeof document !== 'undefined') {
       document.body.classList.toggle('dark-mode', this.isDarkMode);

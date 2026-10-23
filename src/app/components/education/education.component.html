@@ -26,17 +26,16 @@
           <div class="card-accent-bar" aria-hidden="true"></div>
 
           <div class="edu-body">
+            <!-- Top Row: Degree Title & Year Pill -->
             <div class="edu-header">
-              <div class="title-meta">
-                <span class="milestone-tag">Milestone 0{{ i + 1 }}</span>
-                <h3 class="degree-title">{{ item.degree }}</h3>
-              </div>
+              <h3 class="degree-title">{{ item.degree }}</h3>
               <span class="education-year">
                 <i class="fa-regular fa-calendar-days" aria-hidden="true"></i>
                 {{ item.year }}
               </span>
             </div>
 
+            <!-- Institution -->
             <div class="institution-row">
               <i class="fa-solid fa-building-columns" aria-hidden="true"></i>
               <a
@@ -54,12 +53,11 @@
               </ng-template>
             </div>
 
+            <!-- Location: directly beneath institution -->
             <div *ngIf="item.location" class="location-row">
               <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
               <span>{{ item.location }}</span>
             </div>
-
-            <p *ngIf="item.details" class="edu-details">{{ item.details }}</p>
           </div>
         </div>
       </article>

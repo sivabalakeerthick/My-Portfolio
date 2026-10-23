@@ -8,7 +8,9 @@ export interface Skill {
 }
 
 export interface SkillCategory {
+  id: string;
   title: string;
+  shortTitle?: string;
   icon: string;
   featured?: boolean;
   skills: Skill[];
@@ -22,11 +24,29 @@ export interface SkillCategory {
   styleUrl: './skills.component.scss'
 })
 export class SkillsComponent {
+  selectedCategory: string = 'all';
+
+  get totalSkillCount(): number {
+    return this.categories.reduce((acc, cat) => acc + cat.skills.length, 0);
+  }
+
+  get filteredCategories(): SkillCategory[] {
+    if (this.selectedCategory === 'all') {
+      return this.categories;
+    }
+    return this.categories.filter(cat => cat.id === this.selectedCategory);
+  }
+
+  selectCategory(id: string): void {
+    this.selectedCategory = id;
+  }
+
   categories: SkillCategory[] = [
     {
+      id: 'genai',
       title: 'Generative AI & Agentic RAG',
+      shortTitle: 'GenAI & RAG',
       icon: 'fa-solid fa-brain',
-      featured: true,
       skills: [
         { name: 'LangGraph', icon: 'assets/icons/langgraph.svg' },
         { name: 'LangChain', icon: 'https://cdn.simpleicons.org/langchain/1C3C3C' },
@@ -37,7 +57,9 @@ export class SkillsComponent {
       ]
     },
     {
+      id: 'frontend',
       title: 'Frontend & UI Architecture',
+      shortTitle: 'Frontend',
       icon: 'fa-solid fa-laptop-code',
       skills: [
         { name: 'Angular', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/angular/angular-original.svg' },
@@ -50,7 +72,9 @@ export class SkillsComponent {
       ]
     },
     {
+      id: 'backend',
       title: 'Backend & Systems Architecture',
+      shortTitle: 'Backend',
       icon: 'fa-solid fa-server',
       skills: [
         { name: 'Spring Boot', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon@latest/icons/spring/spring-original.svg' },
@@ -63,7 +87,9 @@ export class SkillsComponent {
       ]
     },
     {
+      id: 'databases',
       title: 'Security, Identity & Databases',
+      shortTitle: 'Security & DB',
       icon: 'fa-solid fa-shield-halved',
       skills: [
         { name: 'Auth0', icon: 'https://cdn.simpleicons.org/auth0/EB5424' },
@@ -74,7 +100,9 @@ export class SkillsComponent {
       ]
     },
     {
+      id: 'cloud',
       title: 'Cloud, Hosting & CI/CD',
+      shortTitle: 'Cloud & CI/CD',
       icon: 'fa-solid fa-cloud-arrow-up',
       skills: [
         { name: 'Render', icon: 'https://cdn.simpleicons.org/render/46E3B7' },
@@ -86,7 +114,9 @@ export class SkillsComponent {
       ]
     },
     {
+      id: 'tools',
       title: 'DevOps & Development Tooling',
+      shortTitle: 'DevOps & Tools',
       icon: 'fa-solid fa-screwdriver-wrench',
       skills: [
         { name: 'Git', icon: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/git/git-original.svg' },

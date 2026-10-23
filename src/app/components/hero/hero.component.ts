@@ -9,6 +9,7 @@ import {
   HostListener
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
 import { Subscription } from 'rxjs';
 import { ResumeService } from '../../services/resume.service';
 import { PortfolioConfigService } from '../../services/portfolio-config.service';
@@ -29,7 +30,8 @@ export class HeroComponent implements OnInit, OnDestroy {
     public resumeService: ResumeService,
     public configService: PortfolioConfigService,
     private cdr: ChangeDetectorRef,
-    private ngZone: NgZone
+    private ngZone: NgZone,
+    private sanitizer: DomSanitizer
   ) {}
 
   roles: string[] = [
@@ -47,6 +49,10 @@ export class HeroComponent implements OnInit, OnDestroy {
   private typingTimer: any = null;
   private isDestroyed = false;
 
+  
+  isResumeModalOpen = false;
+  safeResumeUrl: SafeResourceUrl | null = null;
+  resumeViewUrl = '';
   copiedCode = false;
 
   codeSnippet = `const engineer: FullStackDev = {
@@ -79,6 +85,7 @@ export class HeroComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.isDestroyed = true;
+    if (typeof document !== 'undefined') { document.body.classList.remove('modal-open'); }
     this.clearTimer();
     this.configSub?.unsubscribe();
   }
@@ -205,6 +212,36 @@ export class HeroComponent implements OnInit, OnDestroy {
           this.copiedCode = false;
         }, 2200);
       });
+    }
+  }
+
+  
+  openResumeModal(): void {
+    if (!this.resumeService.isAvailable()) {
+      alert('Resume is currently being updated. Please contact me directly via the Contact section!');
+      return;
+    }
+    this.resumeViewUrl = this.resumeService.getViewUrl();
+    this.safeResumeUrl = this.sanitizer.bypassSecurityTrustResourceUrl(this.resumeViewUrl);
+    this.isResumeModalOpen = true;
+    if (typeof document !== 'undefined') {
+      document.body.classList.add('modal-open');
+    }
+    this.cdr.detectChanges();
+  }
+
+  closeResumeModal(): void {
+    this.isResumeModalOpen = false;
+    if (typeof document !== 'undefined') {
+      document.body.classList.remove('modal-open');
+    }
+    this.cdr.detectChanges();
+  }
+
+  @HostListener('window:keydown.escape')
+  onEscape(): void {
+    if (this.isResumeModalOpen) {
+      this.closeResumeModal();
     }
   }
 

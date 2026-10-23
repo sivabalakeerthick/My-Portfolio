@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { PortfolioConfigService } from '../../services/portfolio-config.service';
 
@@ -41,8 +41,43 @@ export interface FreelanceProject {
   templateUrl: './freelancing.component.html',
   styleUrl: './freelancing.component.scss'
 })
-export class FreelancingComponent {
+export class FreelancingComponent implements OnDestroy {
+  isModalOpen = false;
+  activeModalProject: FreelanceProject | null = null;
+
   constructor(public configService: PortfolioConfigService) {}
+
+  openModal(project: FreelanceProject): void {
+    this.activeModalProject = project;
+    this.isModalOpen = true;
+    if (typeof document !== 'undefined') {
+      document.body.classList.add('modal-open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  closeModal(): void {
+    this.isModalOpen = false;
+    this.activeModalProject = null;
+    if (typeof document !== 'undefined') {
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  @HostListener('window:keydown.escape')
+  onEscape(): void {
+    if (this.isModalOpen) {
+      this.closeModal();
+    }
+  }
+
+  ngOnDestroy(): void {
+    if (typeof document !== 'undefined') {
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = '';
+    }
+  }
 
   trackClick(): void {
     this.configService.trackProjectClick('freelance-thivagar');
@@ -61,18 +96,18 @@ export class FreelancingComponent {
   freelanceProjects: FreelanceProject[] = [
     {
       id: 'sm-portfolio',
-      title: 'Architectural Portfolio & Client Presentation Platform',
-      subtitle: 'Custom Web Platform with Digital Book Viewer, Drawing Filters & Self-Service Admin Panel',
+      title: 'Architectural Portfolio & Presentation Platform',
+      subtitle: 'Custom Web Platform with Digital Book Viewer, Drawing Filters & High-Resolution Zoom',
       clientType: 'Private Architectural Client',
       engagement: 'Freelance Client Project',
       myRole: 'Lead Full Stack Developer & Project Owner',
       timeline: '2026',
       status: 'Completed',
-      category: 'Custom Web Application & CMS',
+      category: 'Custom Web Application',
       link: 'https://thivagar.vercel.app/',
-      githubUrl: 'https://github.com/sivabalakeerthick/website',
+      githubUrl: 'https://github.com/sivabalakeerthick/thivagar-portfolio',
       overview:
-        'Designed and developed a custom website for an architect to showcase design portfolios, project drawings, and 3D renderings to prospective clients. Handled the entire project end-to-end — from understanding the client’s vision to designing the user interface, building an interactive presentation reader, and creating an easy-to-use admin dashboard so the client can update their portfolio without writing code.',
+        'Designed and developed a custom website for an architect to showcase design portfolios, project drawings, and 3D renderings to prospective clients. Handled the entire project end-to-end — from understanding the client’s vision to designing the user interface, building an interactive presentation reader, and delivering a fast, responsive viewing experience across all devices.',
       leadershipPillars: [
         {
           icon: 'fa-solid fa-crown',
@@ -86,7 +121,7 @@ export class FreelancingComponent {
         },
         {
           icon: 'fa-solid fa-wand-magic-sparkles',
-          badge: 'Client & User Experience',
+          badge: 'User Experience',
           title: 'Interactive Presentation & Viewing Tools',
           points: [
             'Built an interactive reader so potential clients can browse architectural sheets like turning pages in a book',
@@ -95,13 +130,13 @@ export class FreelancingComponent {
           ]
         },
         {
-          icon: 'fa-solid fa-sliders',
-          badge: 'Client Empowerment',
-          title: 'Easy Self-Service Admin Dashboard',
+          icon: 'fa-solid fa-bolt',
+          badge: 'Speed & Accessibility',
+          title: 'Fast Performance & Direct Client Connections',
           points: [
-            'Created a simple private management screen so the client can upload new drawings and edit project details without touching code',
-            'Implemented instant one-click data backup and restore so all portfolio information stays safe',
-            'Delivered the completed platform on schedule with a clear walkthrough and user guide'
+            'Optimized high-resolution drawings and photos so they load smoothly without consuming high mobile data',
+            'Created dark and blueprint color themes so visitors can switch styles based on their preference',
+            'Integrated one-click direct contact options for WhatsApp, email, and phone calls for quick client inquiries'
           ]
         }
       ],
@@ -123,22 +158,17 @@ export class FreelancingComponent {
           title: 'High-Definition Zoom Inspector',
           description:
             'An intuitive full-screen tool that lets viewers zoom into blueprint details, annotations, and dimensions with smooth mouse and touch gestures.'
-        },
-        {
-          icon: 'fa-solid fa-sliders',
-          title: 'Self-Serve Client Admin Panel',
-          description:
-            'A private, easy-to-use admin dashboard where the studio owner can add new projects, update images, and manage their portfolio independently.'
         }
       ],
       techStack: [
         'Angular',
         'TypeScript',
         'SCSS',
+        'Vercel',
         'Responsive Design',
-        'Interactive Viewer',
-        'Custom Admin CMS',
-        'GitHub Pages'
+        'Interactive Book Viewer',
+        'Drawing Filters',
+        'High-Resolution Zoom'
       ],
       featured: true
     }

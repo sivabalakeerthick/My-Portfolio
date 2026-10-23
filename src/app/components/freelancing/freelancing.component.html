@@ -54,8 +54,18 @@
 
         <p class="project-overview">{{ project.overview }}</p>
 
-        <!-- Project Link Actions -->
-        <div class="project-action-row" *ngIf="project.link || project.githubUrl">
+        <!-- Compact Tech Stack preview on card -->
+        <div class="tech-section card-tech-preview">
+          <span class="tech-label">Key Technologies:</span>
+          <div class="tech-chips">
+            <span *ngFor="let tech of project.techStack" class="tech-chip">
+              {{ tech }}
+            </span>
+          </div>
+        </div>
+
+        <!-- Action Buttons: Live, Code, and Case Study Modal Trigger -->
+        <div class="project-action-row">
           <a
             *ngIf="project.link"
             [href]="project.link"
@@ -77,64 +87,14 @@
             <i class="fa-brands fa-github" aria-hidden="true"></i>
             <span>Source Code</span>
           </a>
-        </div>
-
-        <!-- Leadership, Management & Skills Pillars -->
-        <div class="pillars-section">
-          <h4 class="section-subheading">
-            <i class="fa-solid fa-compass" aria-hidden="true"></i>
-            Project Leadership & Technical Execution
-          </h4>
-
-          <div class="pillars-grid">
-            <div *ngFor="let pillar of project.leadershipPillars" class="pillar-card">
-              <div class="pillar-header">
-                <div class="pillar-icon-wrap">
-                  <i [class]="pillar.icon" aria-hidden="true"></i>
-                </div>
-                <div>
-                  <span class="pillar-badge">{{ pillar.badge }}</span>
-                  <h5 class="pillar-title">{{ pillar.title }}</h5>
-                </div>
-              </div>
-              <ul class="pillar-points">
-                <li *ngFor="let point of pillar.points">
-                  <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
-                  <span>{{ point }}</span>
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>
-
-        <!-- Core Engineering Deliverables -->
-        <div class="deliverables-section">
-          <h4 class="section-subheading">
-            <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
-            Core Systems & Features Delivered
-          </h4>
-
-          <div class="deliverables-grid">
-            <div *ngFor="let item of project.deliverables" class="deliverable-card">
-              <div class="deliverable-icon-wrap">
-                <i [class]="item.icon" aria-hidden="true"></i>
-              </div>
-              <div class="deliverable-body">
-                <h5 class="deliverable-name">{{ item.title }}</h5>
-                <p class="deliverable-desc">{{ item.description }}</p>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Architecture & Tech Stack -->
-        <div class="tech-section">
-          <span class="tech-label">Architecture & Tech Stack:</span>
-          <div class="tech-chips">
-            <span *ngFor="let tech of project.techStack" class="tech-chip">
-              {{ tech }}
-            </span>
-          </div>
+          <button
+            type="button"
+            class="btn btn-case-study"
+            (click)="openModal(project)"
+            [attr.aria-label]="'Open case study for ' + project.title">
+            <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
+            <span>View Case Study & Architecture</span>
+          </button>
         </div>
       </div>
     </article>
@@ -180,6 +140,176 @@
           </a>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- ==============================================================
+       CASE STUDY & ARCHITECTURE MODAL
+       ============================================================== -->
+  <div
+    *ngIf="isModalOpen && activeModalProject"
+    class="modal-backdrop"
+    (click)="closeModal()"
+    role="presentation">
+    <div
+      class="modal-dialog glass-card"
+      (click)="$event.stopPropagation()"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="'modal-title-' + activeModalProject.id">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div class="modal-header-info">
+          <div class="modal-meta-row">
+            <span class="category-pill">{{ activeModalProject.category }}</span>
+            <span class="status-badge" [class.completed]="activeModalProject.status === 'Completed'">
+              <span class="status-dot"></span>
+              {{ activeModalProject.status }}
+            </span>
+            <span class="period-badge">
+              <i class="fa-regular fa-calendar" aria-hidden="true"></i> {{ activeModalProject.timeline }}
+            </span>
+          </div>
+          <h3 [id]="'modal-title-' + activeModalProject.id" class="modal-title">
+            {{ activeModalProject.title }}
+          </h3>
+          <p class="modal-subtitle">{{ activeModalProject.subtitle }}</p>
+        </div>
+
+        <button
+          type="button"
+          class="modal-close-btn"
+          (click)="closeModal()"
+          aria-label="Close Case Study">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <!-- Modal Scrollable Content Body -->
+      <div class="modal-body custom-scrollbar">
+        <!-- Context Summary Bar -->
+        <div class="modal-context-bar">
+          <div class="context-item">
+            <i class="fa-solid fa-user-astronaut" aria-hidden="true"></i>
+            <div>
+              <span class="context-label">Role</span>
+              <strong class="context-val">{{ activeModalProject.myRole }}</strong>
+            </div>
+          </div>
+          <div class="context-item">
+            <i class="fa-solid fa-building-user" aria-hidden="true"></i>
+            <div>
+              <span class="context-label">Client</span>
+              <strong class="context-val">{{ activeModalProject.clientType }}</strong>
+            </div>
+          </div>
+          <div class="context-item">
+            <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
+            <div>
+              <span class="context-label">Engagement</span>
+              <strong class="context-val">{{ activeModalProject.engagement }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 1: Leadership & Technical Pillars -->
+        <div class="modal-section">
+          <h4 class="section-subheading">
+            <i class="fa-solid fa-compass" aria-hidden="true"></i>
+            Project Leadership & Technical Execution
+          </h4>
+
+          <div class="pillars-grid">
+            <div *ngFor="let pillar of activeModalProject.leadershipPillars" class="pillar-card">
+              <div class="pillar-header">
+                <div class="pillar-icon-wrap">
+                  <i [class]="pillar.icon" aria-hidden="true"></i>
+                </div>
+                <div>
+                  <span class="pillar-badge">{{ pillar.badge }}</span>
+                  <h5 class="pillar-title">{{ pillar.title }}</h5>
+                </div>
+              </div>
+              <ul class="pillar-points">
+                <li *ngFor="let point of pillar.points">
+                  <i class="fa-solid fa-check-circle" aria-hidden="true"></i>
+                  <span>{{ point }}</span>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 2: Core Deliverables -->
+        <div class="modal-section">
+          <h4 class="section-subheading">
+            <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+            Core Systems & Features Delivered
+          </h4>
+
+          <div class="deliverables-grid">
+            <div *ngFor="let item of activeModalProject.deliverables" class="deliverable-card">
+              <div class="deliverable-icon-wrap">
+                <i [class]="item.icon" aria-hidden="true"></i>
+              </div>
+              <div class="deliverable-body">
+                <h5 class="deliverable-name">{{ item.title }}</h5>
+                <p class="deliverable-desc">{{ item.description }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 3: Tech Stack -->
+        <div class="modal-section">
+          <h4 class="section-subheading">
+            <i class="fa-solid fa-code" aria-hidden="true"></i>
+            Architecture & Tech Stack
+          </h4>
+          <div class="modal-tech-card">
+            <div class="tech-chips">
+              <span *ngFor="let tech of activeModalProject.techStack" class="tech-chip">
+                {{ tech }}
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer Actions -->
+      <div class="modal-footer">
+        <div class="modal-footer-links">
+          <a
+            *ngIf="activeModalProject.link"
+            [href]="activeModalProject.link"
+            target="_blank"
+            rel="noopener noreferrer"
+            (click)="trackClick()"
+            class="btn btn-primary freelance-btn"
+            [attr.aria-label]="'View live project: ' + activeModalProject.title">
+            <span>View Live Project</span>
+            <i class="fa-solid fa-arrow-up-right-from-square" aria-hidden="true"></i>
+          </a>
+          <a
+            *ngIf="activeModalProject.githubUrl"
+            [href]="activeModalProject.githubUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn btn-secondary freelance-btn"
+            [attr.aria-label]="'View source code for ' + activeModalProject.title">
+            <i class="fa-brands fa-github" aria-hidden="true"></i>
+            <span>Source Code</span>
+          </a>
+        </div>
+        <button
+          type="button"
+          class="btn btn-secondary modal-close-action"
+          (click)="closeModal()">
+          <span>Close</span>
+        </button>
+      </div>
+
     </div>
   </div>
 </section>

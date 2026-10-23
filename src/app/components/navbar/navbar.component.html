@@ -16,14 +16,6 @@
     </ul>
 
     <div class="nav-actions">
-      <div
-        class="status-pill"
-        [class.busy]="!configService.currentConfig.openToWork"
-        [title]="configService.currentConfig.openToWork ? 'Open to opportunities: ' + configService.currentConfig.availabilityStatus : 'Currently focused on ongoing engagements'">
-        <span class="pulse-dot" aria-hidden="true"></span>
-        <span class="status-text">{{ configService.currentConfig.openToWork ? 'Available' : 'Engaged' }}</span>
-      </div>
-
       <button
         class="theme-toggle-btn"
         (click)="toggleTheme()"
@@ -46,7 +38,20 @@
 
   <!-- Mobile Drawer -->
   <div class="mobile-menu-overlay" [class.open]="isMobileMenuOpen" (click)="closeMobileMenu()"></div>
-  <div class="mobile-drawer" [class.open]="isMobileMenuOpen">
+  <div class="mobile-drawer" [class.open]="isMobileMenuOpen" role="dialog" aria-modal="true" aria-label="Mobile Navigation">
+    <div class="mobile-drawer-header">
+      <div class="drawer-brand">
+        <span class="logo-text">SBK</span>
+        <span class="logo-dot"></span>
+      </div>
+      <button
+        type="button"
+        class="drawer-close-btn"
+        (click)="closeMobileMenu()"
+        aria-label="Close navigation menu">
+        <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+      </button>
+    </div>
     <ul class="mobile-nav-links">
       <li><a [class.active]="activeSection === 'hero'" href="#hero" (click)="closeMobileMenu()">Home</a></li>
       <li><a [class.active]="activeSection === 'experience'" href="#experience" (click)="closeMobileMenu()">Experience</a></li>
@@ -56,14 +61,5 @@
       <li><a [class.active]="activeSection === 'education'" href="#education" (click)="closeMobileMenu()">Education</a></li>
       <li><a [class.active]="activeSection === 'contact'" href="#contact" (click)="closeMobileMenu()">Contact</a></li>
     </ul>
-
-    <div
-      class="mobile-drawer-status"
-      [class.busy]="!configService.currentConfig.openToWork">
-      <span class="pulse-dot" aria-hidden="true"></span>
-      <span class="status-text">
-        {{ configService.currentConfig.openToWork ? ('Available: ' + configService.currentConfig.availabilityStatus) : 'Currently Engaged' }}
-      </span>
-    </div>
   </div>
 </header>

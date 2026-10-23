@@ -10,41 +10,82 @@
     </p>
   </div>
 
-  <div class="skills-bento-grid" data-aos="fade-up" data-aos-delay="100">
+  <!-- Interactive Category Filter Bar -->
+  <div class="skills-filter-wrapper" data-aos="fade-up" data-aos-delay="50">
+    <div class="skills-filter-bar">
+      <button
+        type="button"
+        class="filter-tab"
+        [class.active]="selectedCategory === 'all'"
+        (click)="selectCategory('all')"
+        aria-label="Show all skills">
+        <i class="fa-solid fa-shapes" aria-hidden="true"></i>
+        <span>All Skills</span>
+      </button>
+
+      <button
+        *ngFor="let cat of categories"
+        type="button"
+        class="filter-tab"
+        [class.active]="selectedCategory === cat.id"
+        (click)="selectCategory(cat.id)"
+        [attr.aria-label]="'Filter by ' + cat.title">
+        <i [class]="cat.icon" aria-hidden="true"></i>
+        <span>{{ cat.shortTitle || cat.title }}</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- Skills Bento Grid -->
+  <div
+    class="skills-bento-grid"
+    [class.is-single-filtered]="selectedCategory !== 'all'"
+    data-aos="fade-up"
+    data-aos-delay="100">
     <div
-      *ngFor="let category of categories"
-      class="skill-category-card glass-card"
-      [class.featured-category]="category.featured">
+      *ngFor="let category of filteredCategories"
+      class="skill-category-card glass-card">
+      
+      <!-- Category Header -->
       <div class="category-header">
-        <div class="category-icon-wrapper" [class.ai-highlight]="category.featured">
-          <i [class]="category.icon" aria-hidden="true"></i>
-        </div>
-        <div class="category-info">
-          <div class="title-row">
-            <h3 class="category-heading">{{ category.title }}</h3>
-            <span *ngIf="category.featured" class="specialty-badge">
-              <i class="fa-solid fa-bolt" aria-hidden="true"></i> Core Specialization
-            </span>
+        <div class="header-left">
+          <div class="category-icon-wrapper">
+            <i [class]="category.icon" aria-hidden="true"></i>
           </div>
-          <span class="skill-count">{{ category.skills.length }} Technologies</span>
+          <div class="category-info">
+            <h3 class="category-heading">{{ category.title }}</h3>
+          </div>
         </div>
+        <span class="skill-count">{{ category.skills.length }} Skills</span>
       </div>
 
-      <div class="skills-grid">
-        <div *ngFor="let skill of category.skills" class="skill-item" [attr.aria-label]="skill.name">
-          <div class="icon-bubble">
+      <!-- Skills Pills Wrap -->
+      <div class="skills-pills-wrap">
+        <div
+          *ngFor="let skill of category.skills"
+          class="skill-pill"
+          [attr.aria-label]="skill.name">
+          <span class="pill-icon-bubble">
             <img
               [src]="skill.icon"
               [alt]="skill.name"
               [class.dark-invert]="skill.invertInDarkMode"
-              class="skill-icon"
-              width="40"
-              height="40"
+              class="pill-icon"
+              width="18"
+              height="18"
               loading="lazy" />
-          </div>
-          <span class="skill-name">{{ skill.name }}</span>
+          </span>
+          <span class="pill-name">{{ skill.name }}</span>
         </div>
       </div>
     </div>
+  </div>
+
+  <!-- Clear Filter Action (Visible when filtered) -->
+  <div *ngIf="selectedCategory !== 'all'" class="filter-reset-wrap" data-aos="fade-up">
+    <button type="button" class="btn btn-secondary filter-reset-btn" (click)="selectCategory('all')">
+      <i class="fa-solid fa-rotate-left" aria-hidden="true"></i>
+      <span>Show All Categories ({{ totalSkillCount }} Skills)</span>
+    </button>
   </div>
 </section>

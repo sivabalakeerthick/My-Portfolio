@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 export interface Role {
@@ -28,14 +28,16 @@ export interface CompanyExperience {
   templateUrl: './experience.component.html',
   styleUrl: './experience.component.scss'
 })
-export class ExperienceComponent implements OnInit {
+export class ExperienceComponent implements OnInit, OnDestroy {
   selectedCompanyIndex = 0;
   currentIndex = 0;
   totalExperienceMonths = 0;
+  showAllResponsibilities: { [key: number]: boolean } = {};
 
-  // Touch swipe support coordinates
-  private touchStartX = 0;
-  private touchStartY = 0;
+  // Role details modal
+  isModalOpen = false;
+  activeRole: Role | null = null;
+  activeRoleIndex = 0;
 
   companyExperiences: CompanyExperience[] = [
     {
@@ -52,7 +54,7 @@ export class ExperienceComponent implements OnInit {
           endDate: null,
           location: 'Bengaluru, India',
           isCurrent: true,
-          techStack: ['Angular 22', 'TypeScript', 'Axis Framework (Client)', 'SCSS', 'REST APIs', 'Enterprise UI', 'Agile'],
+          techStack: ['Angular 22', 'TypeScript', 'Axis Framework', 'SCSS', 'REST APIs', 'Enterprise UI', 'Agile'],
           responsibilities: [
             'Working as a Frontend Developer on enterprise client projects using Angular and Axis framework',
             'Developed and maintained modular enterprise UI components using Angular and the Axis framework (proprietary client framework) for an enterprise insurance application',
@@ -100,6 +102,20 @@ export class ExperienceComponent implements OnInit {
     this.totalExperienceMonths = this.calculateTotalExperience();
   }
 
+  ngOnDestroy(): void {
+    if (typeof document !== 'undefined') {
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  @HostListener('window:keydown.escape')
+  onEscape(): void {
+    if (this.isModalOpen) {
+      this.closeRoleModal();
+    }
+  }
+
   get currentCompany(): CompanyExperience {
     return this.companyExperiences[this.selectedCompanyIndex];
   }
@@ -115,6 +131,56 @@ export class ExperienceComponent implements OnInit {
   selectCompany(index: number): void {
     this.selectedCompanyIndex = index;
     this.currentIndex = 0;
+  }
+
+  openRoleModal(role: Role, index: number): void {
+    this.activeRole = role;
+    this.activeRoleIndex = index;
+    this.currentIndex = index;
+    this.isModalOpen = true;
+    if (typeof document !== 'undefined') {
+      document.body.classList.add('modal-open');
+      document.body.style.overflow = 'hidden';
+    }
+  }
+
+  closeRoleModal(): void {
+    this.isModalOpen = false;
+    this.activeRole = null;
+    if (typeof document !== 'undefined') {
+      document.body.classList.remove('modal-open');
+      document.body.style.overflow = '';
+    }
+  }
+
+  prev(): void {
+    if (this.experiences.length <= 1) return;
+    this.currentIndex = (this.currentIndex - 1 + this.experiences.length) % this.experiences.length;
+    this.activeRoleIndex = this.currentIndex;
+    this.activeRole = this.experiences[this.currentIndex];
+  }
+
+  next(): void {
+    if (this.experiences.length <= 1) return;
+    this.currentIndex = (this.currentIndex + 1) % this.experiences.length;
+    this.activeRoleIndex = this.currentIndex;
+    this.activeRole = this.experiences[this.currentIndex];
+  }
+
+  goTo(index: number): void {
+    if (index >= 0 && index < this.experiences.length) {
+      this.currentIndex = index;
+      this.activeRoleIndex = index;
+      this.activeRole = this.experiences[index];
+    }
+  }
+
+  isResponsibilitiesExpanded(index: number): boolean {
+    return !!this.showAllResponsibilities[index];
+  }
+
+  toggleResponsibilities(index: number): void {
+    this.showAllResponsibilities[index] = !this.showAllResponsibilities[index];
   }
 
   getRoleMonths(role: Role): number {
@@ -180,49 +246,5 @@ export class ExperienceComponent implements OnInit {
     return this.companyExperiences.reduce((sum, company) => {
       return sum + company.roles.reduce((rSum, role) => rSum + this.getRoleMonths(role), 0);
     }, 0);
-  }
-
-  prev(): void {
-    if (this.experiences.length <= 1) return;
-    this.currentIndex = (this.currentIndex - 1 + this.experiences.length) % this.experiences.length;
-  }
-
-  next(): void {
-    if (this.experiences.length <= 1) return;
-    this.currentIndex = (this.currentIndex + 1) % this.experiences.length;
-  }
-
-  goTo(index: number): void {
-    if (index >= 0 && index < this.experiences.length) {
-      this.currentIndex = index;
-    }
-  }
-
-  // Mobile Touch Swipe Handlers
-  onTouchStart(event: TouchEvent): void {
-    if (event.touches && event.touches.length > 0) {
-      this.touchStartX = event.touches[0].clientX;
-      this.touchStartY = event.touches[0].clientY;
-    }
-  }
-
-  onTouchEnd(event: TouchEvent): void {
-    if (event.changedTouches && event.changedTouches.length > 0) {
-      const touchEndX = event.changedTouches[0].clientX;
-      const touchEndY = event.changedTouches[0].clientY;
-      const deltaX = touchEndX - this.touchStartX;
-      const deltaY = touchEndY - this.touchStartY;
-
-      // Ensure predominant horizontal movement and minimum 40px gesture distance
-      if (Math.abs(deltaX) > 40 && Math.abs(deltaX) > Math.abs(deltaY) * 1.2) {
-        if (deltaX < 0) {
-          // Swiped Left -> advance to next slide
-          this.next();
-        } else {
-          // Swiped Right -> go back to previous slide
-          this.prev();
-        }
-      }
-    }
   }
 }

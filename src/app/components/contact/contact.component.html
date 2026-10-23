@@ -33,13 +33,6 @@
               <span class="widget-value">{{ localTime }}</span>
             </div>
           </div>
-          <div class="widget-item">
-            <i class="fa-solid fa-hourglass-half accent-icon" aria-hidden="true"></i>
-            <div>
-              <span class="widget-label">Notice Period</span>
-              <span class="widget-value">{{ configService.currentConfig.noticePeriod }}</span>
-            </div>
-          </div>
         </div>
 
         <div class="widget-divider"></div>
@@ -91,58 +84,52 @@
         </div>
       </div>
 
-      <!-- Quick Social Pills (Including WhatsApp Pill) -->
-      <div class="social-links-row">
-        <a
-          [href]="whatsappLink"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="social-pill whatsapp-pill"
-          aria-label="Direct WhatsApp Message"
-          title="WhatsApp (@sivabalakeerthick)">
-          <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
-          <span>WhatsApp</span>
-        </a>
-        <a
-          href="https://linkedin.com/in/sivabalakeerthick"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="social-pill linkedin-pill"
-          aria-label="Connect on LinkedIn"
-          title="LinkedIn: /in/sivabalakeerthick">
-          <i class="fa-brands fa-linkedin" aria-hidden="true"></i>
-          <span>LinkedIn</span>
-        </a>
-        <a
-          href="https://github.com/sivabalakeerthick"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="social-pill github-pill"
-          aria-label="View GitHub Profile"
-          title="GitHub: @sivabalakeerthick">
-          <i class="fa-brands fa-github" aria-hidden="true"></i>
-          <span>GitHub</span>
-        </a>
-        <a
-          [href]="instagramUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="social-pill instagram-pill"
-          aria-label="Follow on Instagram"
-          title="Instagram: @sivabalakeerthick">
-          <i class="fa-brands fa-instagram" aria-hidden="true"></i>
-          <span>Instagram</span>
-        </a>
-        <a
-          [href]="chessComUrl"
-          target="_blank"
-          rel="noopener noreferrer"
-          class="social-pill chess-pill"
-          aria-label="Connect on Chess.com"
-          title="Chess.com: @sivabalakerthick">
-          <i class="fa-solid fa-chess-knight" aria-hidden="true"></i>
-          <span>Chess.com</span>
-        </a>
+      <!-- Quick Social Icons with Connect Label in One Row -->
+      <div class="social-connect-row">
+        <span class="connect-label">
+          <i class="fa-solid fa-link accent-icon" aria-hidden="true"></i>
+          Connect
+        </span>
+        <div class="social-buttons-group">
+          <a
+            [href]="whatsappLink"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-btn whatsapp-btn"
+            aria-label="Direct WhatsApp Message"
+            title="WhatsApp (@sivabalakeerthick)">
+            <i class="fa-brands fa-whatsapp" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://linkedin.com/in/sivabalakeerthick"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-btn linkedin-btn"
+            aria-label="Connect on LinkedIn"
+            title="LinkedIn: /in/sivabalakeerthick">
+            <i class="fa-brands fa-linkedin-in" aria-hidden="true"></i>
+          </a>
+          <a
+            href="https://github.com/sivabalakeerthick"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-btn github-btn"
+            aria-label="View GitHub Profile"
+            title="GitHub: @sivabalakeerthick">
+            <i class="fa-brands fa-github" aria-hidden="true"></i>
+          </a>
+          <a
+            [href]="chessComUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="social-btn chess-btn"
+            aria-label="Connect on Chess.com"
+            title="Chess.com: @sivabalakerthick">
+            <svg class="chess-icon" viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+              <path d="M12 0a3.85 3.85 0 0 0-3.875 3.846A3.84 3.84 0 0 0 9.73 6.969l-2.79 1.85c0 .622.144 1.114.434 1.649H9.83c-.014.245-.014.549-.014.925 0 .025.003.048.006.071-.064 1.353-.507 3.472-3.62 5.842-.816.625-1.423 1.495-1.806 2.533a.33.33 0 0 0-.045.084 8.124 8.124 0 0 0-.39 2.516c0 .1.216 1.561 8.038 1.561s8.038-1.46 8.038-1.561c0-2.227-.824-4.048-2.24-5.133-4.034-3.08-3.586-5.74-3.644-6.838h2.458c.29-.535.434-1.027.434-1.649l-2.79-1.836a3.86 3.86 0 0 0 1.604-3.123A3.873 3.873 0 0 0 13.445.275c-.004-.002-.01.004-.015.004A3.76 3.76 0 0 0 12 0Z"/>
+            </svg>
+          </a>
+        </div>
       </div>
     </div>
 
@@ -188,40 +175,6 @@
             <small *ngIf="f['email'].errors['ownerEmailNotAllowed']">
               This is my email address! Please enter your own email so I can respond to you.
             </small>
-          </div>
-        </div>
-
-        <!-- Priority / Importance Selector -->
-        <div class="form-group">
-          <label class="importance-label">
-            <span>Inquiry Priority</span>
-            <span *ngIf="contactForm.value.importance === 'high'" class="urgent-tag">
-              <i class="fa-solid fa-bell"></i> Urgent Priority
-            </span>
-          </label>
-
-          <div class="importance-selector" role="radiogroup" aria-label="Inquiry Priority">
-            <button
-              type="button"
-              class="priority-btn"
-              [class.active]="contactForm.value.importance === 'normal'"
-              (click)="setImportance('normal')"
-              role="radio"
-              [attr.aria-checked]="contactForm.value.importance === 'normal'">
-              <i class="fa-regular fa-envelope" aria-hidden="true"></i>
-              <span>Standard</span>
-            </button>
-
-            <button
-              type="button"
-              class="priority-btn high-priority"
-              [class.active]="contactForm.value.importance === 'high'"
-              (click)="setImportance('high')"
-              role="radio"
-              [attr.aria-checked]="contactForm.value.importance === 'high'">
-              <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
-              <span>High Importance</span>
-            </button>
           </div>
         </div>
 

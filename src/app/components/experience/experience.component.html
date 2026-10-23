@@ -18,27 +18,7 @@
   </div>
 
   <div class="experience-showcase" data-aos="fade-up" data-aos-delay="100">
-    <!-- Company Selector Tabs (Shown if multiple companies exist) -->
-    <div class="company-tabs-container" *ngIf="companyExperiences.length > 1">
-      <div class="company-tabs" role="tablist" aria-label="Companies">
-        <button
-          *ngFor="let comp of companyExperiences; let cIdx = index"
-          class="company-tab-btn"
-          [class.active]="cIdx === selectedCompanyIndex"
-          (click)="selectCompany(cIdx)"
-          role="tab"
-          [attr.aria-selected]="cIdx === selectedCompanyIndex">
-          <i [class]="comp.companyIcon || 'fa-solid fa-building'" aria-hidden="true"></i>
-          <span>{{ comp.company }}</span>
-          <span class="company-role-count">{{ comp.roles.length }} {{ comp.roles.length === 1 ? 'Role' : 'Roles' }}</span>
-          <span *ngIf="comp.isCurrent" class="company-live-pill">
-            <span class="badge-dot"></span> Present
-          </span>
-        </button>
-      </div>
-    </div>
-
-    <!-- Company Master Container: Groups all roles under the current company -->
+    <!-- Company Master Container -->
     <div class="company-master-wrapper">
       <article class="company-master-card glass-card" role="region" [attr.aria-label]="currentCompany.company + ' Experience'">
         <div class="card-glow-bar"></div>
@@ -56,140 +36,199 @@
                   <span class="pulse-dot-sm"></span> Current Employer
                 </span>
               </div>
+              <div class="company-sub-row">
+                <span class="company-tenure-text">
+                  <i class="fa-regular fa-clock" aria-hidden="true"></i>
+                  {{ getCompanyTotalDuration(currentCompany) }}
+                </span>
+                <span class="tenure-separator" aria-hidden="true">•</span>
+                <span class="company-industry-text">{{ currentCompany.industry }}</span>
+              </div>
             </div>
           </div>
         </header>
 
-        <!-- 2. Role Progression Tabs inside Company -->
-        <div class="company-roles-nav">
-          <div class="roles-tabs" role="tablist" [attr.aria-label]="currentCompany.company + ' Roles'">
-            <button
-              *ngFor="let role of experiences; let i = index"
-              class="role-step-tab"
-              [class.active]="i === currentIndex"
-              (click)="goTo(i)"
-              role="tab"
-              [attr.aria-selected]="i === currentIndex">
-              <span class="step-num">0{{ i + 1 }}</span>
-              <div class="step-details">
-                <span class="step-title">{{ role.position }}</span>
-                <span class="step-type">{{ role.role }}</span>
-              </div>
-              <span *ngIf="role.isCurrent" class="step-active-dot" title="Active Role"></span>
-            </button>
-          </div>
-        </div>
+        <!-- 2. Three Distinct Roles in Chronological Stack -->
+        <div class="roles-timeline-list">
+          <article
+            *ngFor="let role of experiences; let i = index"
+            class="role-summary-card"
+            [class.active-role-card]="role.isCurrent"
+            [attr.aria-label]="role.position">
 
-        <!-- 3. Active Role Slide Viewport with Mobile Touch Swipe -->
-        <div
-          class="role-slide-viewport"
-          (touchstart)="onTouchStart($event)"
-          (touchend)="onTouchEnd($event)">
-
-          <div
-            class="role-slide-card"
-            role="tabpanel"
-            [attr.aria-label]="currentExperience.position">
-
-            <!-- Role Card Header -->
-            <div class="role-card-header">
-              <div class="role-title-block">
-                <div class="role-primary-row">
-                  <h4 class="role-position">{{ currentExperience.position }}</h4>
-                  <span *ngIf="currentExperience.isCurrent" class="role-active-badge">
-                    <span class="active-dot"></span> Active Role
-                  </span>
-                </div>
-                <div class="role-secondary-row">
-                  <span class="role-badge">{{ currentExperience.role }}</span>
-                </div>
-              </div>
-
-              <div class="role-meta-block">
-                <span class="role-date-pill">
-                  <i class="fa-regular fa-calendar-days" aria-hidden="true"></i>
-                  {{ getRoleDuration(currentExperience) }}
-                </span>
-                <span *ngIf="currentExperience.location" class="role-loc-pill">
-                  <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
-                  {{ currentExperience.location }}
+            <!-- Top Row: Role Title & Date Pill -->
+            <div class="role-top-row">
+              <div class="role-title-group">
+                <h4 class="role-position-title">{{ role.position }}</h4>
+                <span *ngIf="role.isCurrent" class="role-active-badge">
+                  <span class="active-dot"></span> Current Role
                 </span>
               </div>
-            </div>
 
-            <!-- Role Responsibilities -->
-            <div class="role-responsibilities">
-              <h5 class="responsibilities-title">
-                <i class="fa-solid fa-list-check" aria-hidden="true"></i>
-                Key Contributions & Impact:
-              </h5>
-              <ul class="contributions-list">
-                <li *ngFor="let task of currentExperience.responsibilities">
-                  <span class="bullet-icon" aria-hidden="true">
-                    <i class="fa-solid fa-angle-right"></i>
-                  </span>
-                  <span>{{ task }}</span>
-                </li>
-              </ul>
-            </div>
-
-            <!-- Tech Stack -->
-            <div *ngIf="currentExperience.techStack" class="role-tech-stack">
-              <span class="tech-stack-title">
-                <i class="fa-solid fa-code" aria-hidden="true"></i>
-                Technologies & Tools:
+              <span class="role-date-pill">
+                <i class="fa-regular fa-calendar-days" aria-hidden="true"></i>
+                {{ getRoleDuration(role) }}
               </span>
-              <div class="tech-chips-group">
-                <span *ngFor="let tech of currentExperience.techStack" class="tech-chip">
-                  {{ tech }}
-                </span>
-              </div>
             </div>
 
-          </div>
+            <!-- Sub Row: Track Badge, Action Trigger Button & Location -->
+            <div class="role-sub-row">
+              <div class="role-left-group">
+                <span class="role-track-badge">{{ role.role }}</span>
+                <button
+                  type="button"
+                  class="btn-role-details"
+                  (click)="openRoleModal(role, i)"
+                  [attr.aria-label]="'View details and key contributions for ' + role.position">
+                  <span>View Contributions & Details</span>
+                  <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                </button>
+              </div>
+
+              <span *ngIf="role.location" class="role-location-pill">
+                <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+                {{ role.location }}
+              </span>
+            </div>
+
+          </article>
         </div>
 
-        <!-- 4. Slide Navigation Controller (Arrows hidden in mobile; swipeable) -->
-        <div class="slide-navigation-bar">
-          <!-- Desktop/Tablet Prev Arrow (Hidden on Mobile) -->
-          <button
-            class="slide-nav-btn prev-btn"
-            (click)="prev()"
-            aria-label="Previous role"
-            title="Previous Role">
-            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
-            <span class="nav-btn-text">Previous</span>
-          </button>
+      </article>
+    </div>
+  </div>
 
-          <!-- Center: Indicators & Counter (+ mobile swipe hint) -->
-          <div class="slide-nav-center">
-            <div class="slide-indicators">
-              <button
-                *ngFor="let role of experiences; let i = index"
-                class="indicator-dot"
-                [class.active]="i === currentIndex"
-                (click)="goTo(i)"
-                [attr.aria-label]="'Go to ' + role.position">
-              </button>
-            </div>
-            <span class="slide-counter">0{{ currentIndex + 1 }} / 0{{ experiences.length }}</span>
-            <span class="mobile-swipe-hint">
-              <i class="fa-solid fa-arrows-left-right" aria-hidden="true"></i> Swipe
+  <!-- ==============================================================
+       ROLE DETAILS & IMPACT MODAL
+       ============================================================== -->
+  <div
+    *ngIf="isModalOpen && activeRole"
+    class="modal-backdrop"
+    (click)="closeRoleModal()"
+    role="presentation">
+    <div
+      class="modal-dialog glass-card"
+      (click)="$event.stopPropagation()"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="'modal-role-title-' + activeRoleIndex">
+
+      <!-- Modal Header -->
+      <div class="modal-header">
+        <div class="modal-header-info">
+          <div class="modal-meta-row">
+            <span class="company-chip">
+              <i class="fa-solid fa-building" aria-hidden="true"></i>
+              {{ currentCompany.company }}
+            </span>
+            <span class="role-number-chip">Role 0{{ activeRoleIndex + 1 }} of 0{{ experiences.length }}</span>
+            <span *ngIf="activeRole.isCurrent" class="role-active-badge">
+              <span class="active-dot"></span> Active Role
             </span>
           </div>
 
-          <!-- Desktop/Tablet Next Arrow (Hidden on Mobile) -->
+          <h3 [id]="'modal-role-title-' + activeRoleIndex" class="modal-title">
+            {{ activeRole.position }}
+          </h3>
+          <p class="modal-subtitle">{{ activeRole.role }}</p>
+        </div>
+
+        <button
+          type="button"
+          class="modal-close-btn"
+          (click)="closeRoleModal()"
+          aria-label="Close Role Details">
+          <i class="fa-solid fa-xmark" aria-hidden="true"></i>
+        </button>
+      </div>
+
+      <!-- Modal Scrollable Content Body -->
+      <div class="modal-body custom-scrollbar">
+        <!-- Context Summary Bar -->
+        <div class="modal-context-bar">
+          <div class="context-item">
+            <i class="fa-regular fa-calendar-days" aria-hidden="true"></i>
+            <div>
+              <span class="context-label">Tenure</span>
+              <strong class="context-val">{{ getRoleDuration(activeRole) }}</strong>
+            </div>
+          </div>
+          <div class="context-item">
+            <i class="fa-solid fa-location-dot" aria-hidden="true"></i>
+            <div>
+              <span class="context-label">Location</span>
+              <strong class="context-val">{{ activeRole.location }}</strong>
+            </div>
+          </div>
+          <div class="context-item">
+            <i class="fa-solid fa-briefcase" aria-hidden="true"></i>
+            <div>
+              <span class="context-label">Track</span>
+              <strong class="context-val">{{ activeRole.role }}</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Section 1: Key Contributions & Impact -->
+        <div class="modal-section">
+          <h4 class="section-subheading">
+            <i class="fa-solid fa-list-check" aria-hidden="true"></i>
+            Key Contributions & Impact
+          </h4>
+
+          <ul class="contributions-list">
+            <li *ngFor="let task of activeRole.responsibilities">
+              <span class="bullet-icon" aria-hidden="true">
+                <i class="fa-solid fa-angle-right"></i>
+              </span>
+              <span>{{ task }}</span>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Section 2: Technologies & Tools -->
+        <div *ngIf="activeRole.techStack" class="modal-section">
+          <h4 class="section-subheading">
+            <i class="fa-solid fa-code" aria-hidden="true"></i>
+            Technologies & Tools
+          </h4>
+          <div class="tech-chips-group">
+            <span *ngFor="let tech of activeRole.techStack" class="tech-chip">
+              {{ tech }}
+            </span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Modal Footer Actions with Role Switcher -->
+      <div class="modal-footer">
+        <div class="modal-nav-group">
           <button
-            class="slide-nav-btn next-btn"
+            type="button"
+            class="btn btn-secondary modal-nav-btn"
+            (click)="prev()"
+            aria-label="View previous role">
+            <i class="fa-solid fa-arrow-left" aria-hidden="true"></i>
+            <span>Previous Role</span>
+          </button>
+          <button
+            type="button"
+            class="btn btn-secondary modal-nav-btn"
             (click)="next()"
-            aria-label="Next role"
-            title="Next Role">
-            <span class="nav-btn-text">Next</span>
+            aria-label="View next role">
+            <span>Next Role</span>
             <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
           </button>
         </div>
 
-      </article>
+        <button
+          type="button"
+          class="btn btn-secondary modal-close-action"
+          (click)="closeRoleModal()">
+          <span>Close</span>
+        </button>
+      </div>
+
     </div>
   </div>
 </section>
