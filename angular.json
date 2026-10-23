@@ -27,7 +27,8 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/sitemap.xml"
+              "src/sitemap.xml",
+              "src/googledb3c57f4decc51b2.html"
             ],
             "styles": [
               "node_modules/aos/dist/aos.css",
@@ -103,7 +104,8 @@
             "assets": [
               "src/favicon.ico",
               "src/assets",
-              "src/sitemap.xml"
+              "src/sitemap.xml",
+              "src/googledb3c57f4decc51b2.html"
             ],
             "styles": [
               "src/styles.scss"
